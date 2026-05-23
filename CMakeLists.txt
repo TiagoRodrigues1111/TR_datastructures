@@ -80,9 +80,19 @@ write_basic_package_version_file(
     COMPATIBILITY SameMajorVersion
 )
 
+configure_file(
+    cmake/tr_version.h.in
+    include/tr_datastructures/tr_version.h
+)
+
 install(
     FILES
         "${CMAKE_CURRENT_BINARY_DIR}/tr_datastructures-config-version.cmake"
         "${CMAKE_CURRENT_SOURCE_DIR}/cmake/tr_datastructures-config.cmake.in"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/tr_datastructures"
+)
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/include/tr_datastructures/tr_version.h"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/tr_datastructures"
 )
