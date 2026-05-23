@@ -1,11 +1,13 @@
 ---
-Language: Cpp
+Language: C
+#Language: Cpp
+
 
 # ------------------------------------------------------------------
 # BASE STYLE
 # ------------------------------------------------------------------
 BasedOnStyle: LLVM
-Standard: Cpp03
+#Standard: Cpp03
 
 # ------------------------------------------------------------------
 # INDENTATION
@@ -70,6 +72,7 @@ SpacesInParentheses: false
 SpacesInSquareBrackets: false
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeCpp11BracedList: false
+SpaceAfterCStyleCast: true
 
 # ------------------------------------------------------------------
 # SWITCH / CASE

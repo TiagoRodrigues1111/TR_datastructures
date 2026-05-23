@@ -14,8 +14,8 @@ LICENSE text eol=lf
 # ------------------------------------------------------------------
 # CODE & BUILD
 # ------------------------------------------------------------------
-*.c     text diff=cpp
-*.h     text diff=cpp
+*.c     text eol=lf diff=cpp
+*.h     text eol=lf diff=cpp
 *.in    text
 *.cmake text
 CMakeLists.txt text
@@ -47,6 +47,8 @@ CMakeLists.txt text
 *.so    binary
 *.dll   binary
 *.exe   binary
+*.o     binary
+*.lib   binary
 
 # ------------------------------------------------------------------
 # EXPORT IGNORE
@@ -64,3 +66,5 @@ CMakeLists.txt text
 *.h linguist-language=C
 docs/* linguist-documentation
 examples/* linguist-documentation
+benchmarks/* linguist-vendored
+fuzz/*        linguist-vendored

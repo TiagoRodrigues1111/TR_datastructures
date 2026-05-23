@@ -2,6 +2,7 @@
 Checks: >
         clang-analyzer-*,
         bugprone-*,
+        -bugprone-easily-swappable-parameters,
         portability-*,
         readability-*,
         -readability-magic-numbers,
@@ -12,7 +13,10 @@ Checks: >
         -performance-*,
         -hicpp-*
 
-WarningsAsErrors: ''
+WarningsAsErrors: >
+        clang-analyzer-*,
+        bugprone-null-pointer-arithmetic,
+        bugprone-use-after-move
 
 HeaderFilterRegex: 'include/tr_datastructures/.*|src/.*'
 
@@ -35,3 +39,12 @@ CheckOptions:
 
         - key: readability-identifier-naming.MacroDefinitionCase
           value: UPPER_CASE
+
+        - key: readability-identifier-naming.TypedefCase
+          value: lower_case
+
+        - key: readability-identifier-naming.TypedefSuffix
+          value: _t
+
+        - key: readability-identifier-naming.ParameterCase
+          value: lower_case

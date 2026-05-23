@@ -1,0 +1,68 @@
+# ------------------------------------------------------------------
+# build_test.yml
+# Configures, builds, and tests the library on all target platforms
+# ------------------------------------------------------------------
+
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    name: ${{ matrix.os }} | ${{ matrix.compiler }} | ${{ matrix.build_type }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+        build_type: [ Debug, Release ]
+        compiler:
+          - { cc: gcc,   cxx: g++   }
+          - { cc: clang, cxx: clang++ }
+        exclude:
+          # MSVC is the natural Windows compiler, but we start with gcc/clang via MinGW
+          # Clang on Windows needs extra setup — start simple, add later
+          - os: windows-latest
+            compiler: { cc: clang, cxx: clang++ }
+
+    steps:
+      # ------------------------------------------------------------------
+      # 1. Checkout
+      # ------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ------------------------------------------------------------------
+      # 2. Set compiler environment (Linux)
+      # ------------------------------------------------------------------
+      - name: Set compiler (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          echo "CC=${{ matrix.compiler.cc }}"   >> $GITHUB_ENV
+          echo "CXX=${{ matrix.compiler.cxx }}" >> $GITHUB_ENV
+
+      # ------------------------------------------------------------------
+      # 3. Configure
+      # ------------------------------------------------------------------
+      - name: Configure CMake
+        run: >
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      # ------------------------------------------------------------------
+      # 4. Build
+      # ------------------------------------------------------------------
+      - name: Build
+        run: cmake --build build --config ${{ matrix.build_type }}
+
+      # ------------------------------------------------------------------
+      # 5. Test
+      # ------------------------------------------------------------------
+      - name: Run tests
+        working-directory: build
+        run: ctest --build-config ${{ matrix.build_type }} --output-on-failure
