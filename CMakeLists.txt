@@ -48,6 +48,8 @@ endif()
 # ------------------------------------------------------------------
 # 4. SUBDIRECTORIES
 # ------------------------------------------------------------------
+include(GNUInstallDirs)
+
 add_subdirectory(src)
 
 if(TR_BUILD_TESTS)
@@ -70,7 +72,6 @@ endif()
 # ------------------------------------------------------------------
 # 5. INSTALL & PACKAGING
 # ------------------------------------------------------------------
-include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(
