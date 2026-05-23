@@ -1,0 +1,22 @@
+{
+        
+    "name": "tr-datastructures",
+    "version": "0.1.0",
+    "description": "A generic C data structures library",
+    "license": "Unlicense",
+
+    "supports": "!uwp",
+
+    "dependencies": [],
+
+    "features": {
+        "tests": {
+            "description": "Build the test suite",
+            "dependencies": []
+        },
+        "benchmarks": {
+            "description": "Build the benchmarks",
+            "dependencies": []
+        }
+    }
+}
