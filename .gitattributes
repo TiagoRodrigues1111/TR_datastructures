@@ -1,0 +1,66 @@
+# ------------------------------------------------------------------
+# DEFAULT BEHAVIOR
+# ------------------------------------------------------------------
+* text=auto eol=lf
+
+# ------------------------------------------------------------------
+# DOCUMENTATION
+# ------------------------------------------------------------------
+*.md    text eol=lf
+*.txt   text eol=lf
+LICENSE text eol=lf
+
+
+# ------------------------------------------------------------------
+# CODE & BUILD
+# ------------------------------------------------------------------
+*.c     text diff=cpp
+*.h     text diff=cpp
+*.in    text
+*.cmake text
+CMakeLists.txt text
+
+
+# ------------------------------------------------------------------
+# CONFIG & CI
+# ------------------------------------------------------------------
+*.yml   text eol=lf
+*.yaml  text eol=lf
+
+# ------------------------------------------------------------------
+# SCRIPTS
+# ------------------------------------------------------------------
+*.sh    text eol=lf
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.ps1   text eol=crlf
+
+# ------------------------------------------------------------------
+# BINARY FILES
+# ------------------------------------------------------------------
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.pdf   binary
+*.a     binary
+*.so    binary
+*.dll   binary
+*.exe   binary
+
+# ------------------------------------------------------------------
+# EXPORT IGNORE
+# ------------------------------------------------------------------
+.gitattributes  export-ignore
+.gitignore      export-ignore
+.github         export-ignore
+.clang-format   export-ignore
+.clang-tidy     export-ignore
+.editorconfig   export-ignore
+
+# ------------------------------------------------------------------
+# LINGUIST & STATS
+# ------------------------------------------------------------------
+*.h linguist-language=C
+docs/* linguist-documentation
+examples/* linguist-documentation

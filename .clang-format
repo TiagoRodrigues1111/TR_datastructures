@@ -1,0 +1,119 @@
+---
+Language: Cpp
+
+# ------------------------------------------------------------------
+# BASE STYLE
+# ------------------------------------------------------------------
+BasedOnStyle: LLVM
+Standard: Cpp03
+
+# ------------------------------------------------------------------
+# INDENTATION
+# ------------------------------------------------------------------
+UseTab: Never
+IndentWidth: 8
+TabWidth: 8
+ContinuationIndentWidth: 8
+
+# ------------------------------------------------------------------
+# LINE LENGTH
+# ------------------------------------------------------------------
+ColumnLimit: 100
+
+# ------------------------------------------------------------------
+# BRACES
+# ------------------------------------------------------------------
+BreakBeforeBraces: Allman
+BraceWrapping:
+        AfterClass: true
+        AfterControlStatement: Always
+        AfterEnum: true
+        AfterFunction: true
+        AfterStruct: true
+        AfterUnion: true
+        AfterExternBlock: true
+        BeforeElse: true
+        BeforeCatch: true
+        SplitEmptyFunction: false
+        SplitEmptyRecord: false
+        SplitEmptyNamespace: false
+
+# ------------------------------------------------------------------
+# CONTROL STATEMENTS
+# ------------------------------------------------------------------
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+AllowShortCaseLabelsOnASingleLine: false
+
+# ------------------------------------------------------------------
+# FUNCTION DECLARATIONS
+# ------------------------------------------------------------------
+AlwaysBreakAfterReturnType: None
+AlwaysBreakAfterDefinitionReturnType: None
+BinPackArguments: false
+BinPackParameters: false
+
+# ------------------------------------------------------------------
+# POINTERS & REFERENCES
+# ------------------------------------------------------------------
+PointerAlignment: Right
+ReferenceAlignment: Right
+
+# ------------------------------------------------------------------
+# SPACING
+# ------------------------------------------------------------------
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCpp11BracedList: false
+
+# ------------------------------------------------------------------
+# SWITCH / CASE
+# ------------------------------------------------------------------
+IndentCaseLabels: true
+
+# ------------------------------------------------------------------
+# EMPTY LINES
+# ------------------------------------------------------------------
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# ------------------------------------------------------------------
+# ALIGNMENT
+# ------------------------------------------------------------------
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignOperands: false
+AlignTrailingComments: true
+
+# ------------------------------------------------------------------
+# COMMENTS
+# ------------------------------------------------------------------
+ReflowComments: true
+
+# ------------------------------------------------------------------
+# INCLUDE HANDLING
+# ------------------------------------------------------------------
+SortIncludes: false
+IncludeBlocks: Preserve
+
+# ------------------------------------------------------------------
+# C PREPROCESSOR
+# ------------------------------------------------------------------
+IndentPPDirectives: None
+
+# ------------------------------------------------------------------
+# ARRAYS / INITIALIZERS
+# ------------------------------------------------------------------
+Cpp11BracedListStyle: false
+
+# ------------------------------------------------------------------
+# MISC
+# ------------------------------------------------------------------
+SeparateDefinitionBlocks: Always
+FixNamespaceComments: false
+...

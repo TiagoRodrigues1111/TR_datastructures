@@ -1,0 +1,37 @@
+---
+Checks: >
+        clang-analyzer-*,
+        bugprone-*,
+        portability-*,
+        readability-*,
+        -readability-magic-numbers,
+        -readability-identifier-length,
+        -readability-function-cognitive-complexity,
+        -modernize-*,
+        -cppcoreguidelines-*,
+        -performance-*,
+        -hicpp-*
+
+WarningsAsErrors: ''
+
+HeaderFilterRegex: 'include/tr_datastructures/.*|src/.*'
+
+AnalyzeTemporaryDtors: false
+
+FormatStyle: none
+
+CheckOptions:
+        - key: readability-identifier-naming.FunctionCase
+          value: lower_case
+
+        - key: readability-identifier-naming.VariableCase
+          value: lower_case
+
+        - key: readability-identifier-naming.StructCase
+          value: lower_case
+
+        - key: readability-identifier-naming.EnumCase
+          value: lower_case
+
+        - key: readability-identifier-naming.MacroDefinitionCase
+          value: UPPER_CASE
