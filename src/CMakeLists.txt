@@ -30,6 +30,7 @@ target_include_directories(tr_datastructures
 # ------------------------------------------------------------------
 target_compile_definitions(tr_datastructures
     PRIVATE
+        $<$<CONFIG:Debug>:TR_CMAKE_DEBUG>
         $<$<BOOL:${BUILD_SHARED_LIBS}>:TR_DATASTRUCTURES_SHARED>
         $<$<BOOL:${BUILD_SHARED_LIBS}>:TR_DATASTRUCTURES_EXPORTS>
     INTERFACE

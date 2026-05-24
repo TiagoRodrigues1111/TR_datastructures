@@ -46,13 +46,6 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 
-# define TR_CMAKE_DEBUG in debug builds
-target_compile_definitions(tr_datastructures
-    PRIVATE
-        $<$<CONFIG:Debug>:TR_CMAKE_DEBUG>
-)
-
-
 # ------------------------------------------------------------------
 # 4. SUBDIRECTORIES
 # ------------------------------------------------------------------
