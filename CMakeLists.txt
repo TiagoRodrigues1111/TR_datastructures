@@ -50,6 +50,11 @@ endif()
 # ------------------------------------------------------------------
 include(GNUInstallDirs)
 
+configure_file(
+    cmake/tr_version.h.in
+    include/tr_datastructures/tr_version.h
+)
+
 add_subdirectory(src)
 
 if(TR_BUILD_TESTS)

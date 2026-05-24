@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.1.0] - 2026-05-23
+## [0.1.0] - 2026-05-24
 
 ### Added
 - Project structure and directory layout
@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.gitignore` — build output, IDE folders, and generated files
 - `.github/workflows/build_test.yml` — CI on Ubuntu and Windows, Debug and Release
 - `CHANGELOG.md`, `README.md`, `CONTRIBUTING.md`, `LICENSE`, `SECURITY.md` — project documentation stubs
+- `tr_types.h` — types support for the different c standards
 
 ---
 

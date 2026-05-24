@@ -26,7 +26,19 @@ target_include_directories(tr_datastructures
 )
 
 # ------------------------------------------------------------------
-# 4. INSTALL TARGET
+# 4. COMPILE DEFINITIONS
+# ------------------------------------------------------------------
+target_compile_definitions(tr_datastructures
+    PRIVATE
+        $<$<BOOL:${BUILD_SHARED_LIBS}>:TR_DATASTRUCTURES_SHARED>
+        $<$<BOOL:${BUILD_SHARED_LIBS}>:TR_DATASTRUCTURES_EXPORTS>
+    INTERFACE
+        $<$<BOOL:${BUILD_SHARED_LIBS}>:TR_DATASTRUCTURES_SHARED>
+)
+
+
+# ------------------------------------------------------------------
+# 5. INSTALL TARGET
 # ------------------------------------------------------------------
 install(
     TARGETS tr_datastructures
@@ -39,6 +51,12 @@ install(
 install(
     DIRECTORY ${PROJECT_SOURCE_DIR}/include/tr_datastructures
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/../include/tr_datastructures/tr_version.h"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/tr_datastructures"
 )
 
 install(
