@@ -35,6 +35,8 @@ extern "C"
 #include "tr_datastructures/tr_version.h"
 #include "tr_datastructures/tr_types.h"
 #include "tr_datastructures/tr_export.h"
+#include "tr_datastructures/tr_result.h"  
+
 
 /* -- data structures -- */
 /* #include "tr_datastructures/tr_stack.h" */
