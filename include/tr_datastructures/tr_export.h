@@ -106,6 +106,23 @@ extern "C"
 #define TR_DEPRECATED(message)
 #endif
 
+
+/* ------------------------------------------------------------------
+ * 2.5 No discard macro
+ * Warns if the return value of a function is ignored
+ * Apply to all functions returning tr_result_t
+ * ------------------------------------------------------------------ */
+#if defined(__GNUC__) && (__GNUC__ >= 4) || defined(__clang__)
+/* GCC version 4 or later, or Clang */
+#define TR_NODISCARD __attribute__((warn_unused_result))
+#elif defined(_MSC_VER) && (_MSC_VER >= 1700)
+/* Microsoft Visual C++ compiler version 2012 or later */
+#define TR_NODISCARD _Check_return_
+#else
+/* unknown compiler - degrade gracefully */
+#define TR_NODISCARD
+#endif
+
         // clang-format off
 /*****************************************************/
 
