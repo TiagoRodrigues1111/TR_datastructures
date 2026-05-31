@@ -39,7 +39,7 @@ extern "C"
 
 
 /* -- data structures -- */
-/* #include "tr_datastructures/tr_stack.h" */
+#include "tr_datastructures/tr_stack.h"
 /* #include "tr_datastructures/tr_queue.h" */
 
 
