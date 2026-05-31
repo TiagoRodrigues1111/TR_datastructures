@@ -185,11 +185,11 @@ TR_NODISCARD TR_API tr_result_t stack_top(const struct stack *id_of_stack, void 
  *
  * ARGUMENTS:
  *
- * ARGUMENT                TYPE            I/O     DESCRIPTION
- * --------                ----            ---     ------------
+ * ARGUMENT                TYPE                 I/O     DESCRIPTION
+ * --------                ----                 ---     ------------
  * id_of_stack             const struct stack * I       Pointer to the stack to query
- * size                    size_t *        O       Pointer to receive the current element
- * count
+ * size                    size_t *             O       Pointer to receive the current element
+ *                                                        count
  *
  * RETURNS: tr_result_t
  *   TR_OK               - Size retrieved successfully
@@ -206,11 +206,11 @@ TR_NODISCARD TR_API tr_result_t stack_size(const struct stack *id_of_stack, size
  *
  * ARGUMENTS:
  *
- * ARGUMENT                TYPE            I/O     DESCRIPTION
- * --------                ----            ---     ------------
+ * ARGUMENT                TYPE                 I/O     DESCRIPTION
+ * --------                ----                 ---     ------------
  * id_of_stack             const struct stack * I       Pointer to the stack to check
- * is_empty                bool *          O       Pointer to receive the result
- *                                                 Set to true if empty, false otherwise
+ * is_empty                bool *               O       Pointer to receive the result
+ *                                                       Set to true if empty, false otherwise
  *
  * RETURNS: tr_result_t
  *   TR_OK               - Check completed successfully
@@ -228,10 +228,10 @@ TR_NODISCARD TR_API tr_result_t stack_is_empty(const struct stack *id_of_stack, 
  *
  * ARGUMENTS:
  *
- * ARGUMENT                TYPE            I/O     DESCRIPTION
- * --------                ----            ---     ------------
+ * ARGUMENT                TYPE                 I/O     DESCRIPTION
+ * --------                ----                 ---     ------------
  * id_of_stack             const struct stack * I       Pointer to the stack to query
- * capacity                size_t *        O       Pointer to receive the capacity
+ * capacity                size_t *             O       Pointer to receive the capacity
  *
  * RETURNS: tr_result_t
  *   TR_OK               - Capacity retrieved successfully
