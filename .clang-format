@@ -108,7 +108,7 @@ IncludeBlocks: Preserve
 # C PREPROCESSOR
 # ------------------------------------------------------------------
 IndentPPDirectives: None
-
+IndentExternBlock: NoIndent
 # ------------------------------------------------------------------
 # ARRAYS / INITIALIZERS
 # ------------------------------------------------------------------
@@ -119,4 +119,3 @@ Cpp11BracedListStyle: false
 # ------------------------------------------------------------------
 SeparateDefinitionBlocks: Always
 FixNamespaceComments: false
-...
