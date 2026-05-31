@@ -73,15 +73,16 @@ struct stack;
  *
  * ARGUMENTS:
  *
- * ARGUMENT                TYPE            I/O     DESCRIPTION
- * --------                ----            ---     ------------
- * size_of_datatype        size_t          I       Byte size of the datatype to store in the
- * stack elements_to_allocate    size_t          I       Initial number of elements to
- * allocate id_of_stack             stack_t **      O       Pointer to pointer to receive
- * the created stack
+ * ARGUMENT                     TYPE            I/O     DESCRIPTION
+ * --------                     ----            ---     ------------
+ * size_of_datatype             size_t          I       Byte size of the datatype to store in the
+ * stack elements_to_allocate   size_t          I       Initial number of elements to
+ * allocate id_of_stack         stack_t **      O       Pointer to pointer to receive the created
+ *                                                       stack
  *
  * RETURNS: tr_result_t
  *   TR_OK               - Stack created successfully
+ *   TR_ERR_NULL         - id_of_stack is NULL
  *   TR_ERR_INVALID      - size_of_datatype or elements_to_allocate is 0
  *   TR_ERR_ALLOC        - Memory allocation failed
  *
@@ -98,10 +99,10 @@ TR_NODISCARD TR_API tr_result_t stack_create(const size_t size_of_datatype,
  *
  * ARGUMENTS:
  *
- * ARGUMENT                TYPE            I/O     DESCRIPTION
- * --------                ----            ---     ------------
- * id_of_stack             stack_t **      I/O     Pointer to pointer to the stack to
- * destroy Set to NULL after destruction
+ * ARGUMENT     TYPE                    I/O     DESCRIPTION
+ * --------     ----                    ---     ------------
+ * id_of_stack  struct stack **         I/O     Pointer to pointer to the stack to
+ *                                               destroy. Set to NULL after destruction
  *
  * RETURNS: tr_result_t
  *   TR_OK               - Stack destroyed successfully
@@ -121,8 +122,7 @@ TR_NODISCARD TR_API tr_result_t stack_destroy(struct stack **id_of_stack);
  * ARGUMENT                TYPE            I/O     DESCRIPTION
  * --------                ----            ---     ------------
  * id_of_stack             struct stack *  I/O     Pointer to the stack to push onto
- * data_to_push            const void *    I       Pointer to the data to copy onto the
- * stack
+ * data_to_push            const void *    I       Pointer to the data to copy onto the stack
  *
  * RETURNS: tr_result_t
  *   TR_OK               - Data pushed successfully
@@ -166,7 +166,8 @@ TR_NODISCARD TR_API tr_result_t stack_pop(struct stack *id_of_stack);
  * --------                ----                  ---     ------------
  * id_of_stack             const struct stack *  I       Pointer to the stack to peek at
  * data_at_top             void *                O       Pointer to buffer to copy the top
- * element into Must be at least size_of_datatype bytes
+ *                                                        element into. Must be at least
+ *                                                        size_of_datatype bytes
  *
  * RETURNS: tr_result_t
  *   TR_OK               - Data copied successfully
