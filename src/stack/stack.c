@@ -176,8 +176,8 @@ static tr_result_t stack_array_dynamic_push(struct stack *id_of_stack, const voi
 {
         /* local variables */
         struct tr_stack_array_data *p_data = NULL; /* pointer to implementation data  */
-        void *p_new_data = NULL;                /* pointer for realloc             */
-        size_t new_cap = 0u;                    /* new capacity after growth       */
+        void *p_new_data = NULL;                   /* pointer for realloc             */
+        size_t new_cap = 0u;                       /* new capacity after growth       */
 
         p_data = (struct tr_stack_array_data *) id_of_stack->impl;
 
@@ -190,7 +190,7 @@ static tr_result_t stack_array_dynamic_push(struct stack *id_of_stack, const voi
                 if (NULL == p_new_data)
                 {
                         fprintf(stderr, "[TR] stack_array_push: realloc failed\n");
-                        return TR_ERR_ALLOC;
+                        return (TR_ERR_ALLOC);
                 }
 
                 p_data->stack_data = p_new_data;
@@ -276,12 +276,12 @@ static tr_result_t stack_array_pop(struct stack *id_of_stack)
 
         if (0u == p_data->stack_size)
         {
-                return TR_ERR_EMPTY;
+                return (TR_ERR_EMPTY);
         }
 
         p_data->stack_size--;
 
-        return TR_OK;
+        return (TR_OK);
 }
 
 /*******************************************************************************************************
@@ -311,7 +311,7 @@ static tr_result_t stack_array_top(const struct stack *id_of_stack, void *data_a
 
         if (0u == p_data->stack_size)
         {
-                return TR_ERR_EMPTY;
+                return (TR_ERR_EMPTY);
         }
 
         memcpy(data_at_top,
@@ -319,7 +319,7 @@ static tr_result_t stack_array_top(const struct stack *id_of_stack, void *data_a
                        ((p_data->stack_size - 1u) * p_data->size_of_datatype),
                p_data->size_of_datatype);
 
-        return TR_OK;
+        return (TR_OK);
 }
 
 /*******************************************************************************************************
@@ -347,7 +347,7 @@ static tr_result_t stack_array_size(const struct stack *id_of_stack, size_t *siz
         p_data = (const struct tr_stack_array_data *) id_of_stack->impl;
         *size = p_data->stack_size;
 
-        return TR_OK;
+        return (TR_OK);
 }
 
 /*******************************************************************************************************
@@ -375,7 +375,7 @@ static tr_result_t stack_array_is_empty(const struct stack *id_of_stack, bool *i
         p_data = (const struct tr_stack_array_data *) id_of_stack->impl;
         *is_empty = (0u == p_data->stack_size);
 
-        return TR_OK;
+        return (TR_OK);
 }
 
 /*******************************************************************************************************
@@ -403,7 +403,7 @@ static tr_result_t stack_array_capacity(const struct stack *id_of_stack, size_t 
         p_data = (const struct tr_stack_array_data *) id_of_stack->impl;
         *capacity = p_data->capacity;
 
-        return TR_OK;
+        return (TR_OK);
 }
 
 /*******************************************************************************************************
@@ -439,7 +439,7 @@ static tr_result_t stack_array_destroy(struct stack **id_of_stack)
         free(*id_of_stack);
         *id_of_stack = NULL;
 
-        return TR_OK;
+        return (TR_OK);
 }
 
 /*******************************************************************************************************
@@ -485,23 +485,23 @@ tr_result_t tr_stack_create(size_t size_of_datatype,
                             struct stack **id_of_stack)
 {
         /* local variables */
-        struct stack *p_stack = NULL;           /* pointer to new stack handle     */
+        struct stack *p_stack = NULL;              /* pointer to new stack handle     */
         struct tr_stack_array_data *p_data = NULL; /* pointer to implementation data  */
 
         /* validate arguments */
         if (NULL == id_of_stack)
         {
-                return TR_ERR_NULL;
+                return (TR_ERR_NULL);
         }
 
         if ((0u == size_of_datatype) || (0u == elements_to_allocate))
         {
-                return TR_ERR_INVALID;
+                return (TR_ERR_INVALID);
         }
 
         if ((TR_STACK_ARRAY_DYNAMIC != stack_type) && (TR_STACK_ARRAY_FIXED != stack_type))
         {
-                return TR_ERR_INVALID;
+                return (TR_ERR_INVALID);
         }
 
         /* Allocation of a stack struct */
@@ -509,7 +509,7 @@ tr_result_t tr_stack_create(size_t size_of_datatype,
         if (NULL == p_stack)
         {
                 fprintf(stderr, "[TR] stack_create: malloc failed for stack handle\n");
-                return TR_ERR_ALLOC;
+                return (TR_ERR_ALLOC);
         }
 
         /* Allocate implementation data */
@@ -518,7 +518,7 @@ tr_result_t tr_stack_create(size_t size_of_datatype,
         {
                 fprintf(stderr, "[TR] stack_create: malloc failed for implementation data\n");
                 free(p_stack);
-                return TR_ERR_ALLOC;
+                return (TR_ERR_ALLOC);
         }
 
         /* Allocate data array */
@@ -528,7 +528,7 @@ tr_result_t tr_stack_create(size_t size_of_datatype,
                 fprintf(stderr, "[TR] stack_create: malloc failed for data array\n");
                 free(p_data);
                 free(p_stack);
-                return TR_ERR_ALLOC;
+                return (TR_ERR_ALLOC);
         }
 
         /* Initialise implementation data */
@@ -584,7 +584,7 @@ tr_result_t tr_stack_destroy(struct stack **id_of_stack)
 
         if (NULL == id_of_stack || NULL == *id_of_stack)
         {
-                return TR_ERR_NULL;
+                return (TR_ERR_NULL);
         }
 
         return ((*id_of_stack)->ops->destroy(id_of_stack));
@@ -617,10 +617,10 @@ tr_result_t tr_stack_push(struct stack *id_of_stack, const void *data_to_push)
 
         if (NULL == id_of_stack || NULL == data_to_push)
         {
-                return TR_ERR_NULL;
+                return (TR_ERR_NULL);
         }
 
-        return id_of_stack->ops->push(id_of_stack, data_to_push);
+        return (id_of_stack->ops->push(id_of_stack, data_to_push));
 }
 
 /*******************************************************************************************************
@@ -648,10 +648,10 @@ tr_result_t tr_stack_pop(struct stack *id_of_stack)
 
         if (NULL == id_of_stack)
         {
-                return TR_ERR_NULL;
+                return (TR_ERR_NULL);
         }
 
-        return id_of_stack->ops->pop(id_of_stack);
+        return (id_of_stack->ops->pop(id_of_stack));
 }
 
 /*******************************************************************************************************
@@ -680,10 +680,10 @@ tr_result_t tr_stack_top(const struct stack *id_of_stack, void *data_at_top)
 
         if (NULL == id_of_stack || NULL == data_at_top)
         {
-                return TR_ERR_NULL;
+                return (TR_ERR_NULL);
         }
 
-        return id_of_stack->ops->top(id_of_stack, data_at_top);
+        return (id_of_stack->ops->top(id_of_stack, data_at_top));
 }
 
 /*******************************************************************************************************
@@ -711,10 +711,10 @@ tr_result_t tr_stack_size(const struct stack *id_of_stack, size_t *size)
 
         if (NULL == id_of_stack || NULL == size)
         {
-                return TR_ERR_NULL;
+                return (TR_ERR_NULL);
         }
 
-        return id_of_stack->ops->size(id_of_stack, size);
+        return (id_of_stack->ops->size(id_of_stack, size));
 }
 
 /*******************************************************************************************************
@@ -742,10 +742,10 @@ tr_result_t tr_stack_is_empty(const struct stack *id_of_stack, bool *is_empty)
 
         if (NULL == id_of_stack || NULL == is_empty)
         {
-                return TR_ERR_NULL;
+                return (TR_ERR_NULL);
         }
 
-        return id_of_stack->ops->is_empty(id_of_stack, is_empty);
+        return (id_of_stack->ops->is_empty(id_of_stack, is_empty));
 }
 
 /*******************************************************************************************************
@@ -773,8 +773,8 @@ tr_result_t tr_stack_capacity(const struct stack *id_of_stack, size_t *capacity)
 
         if (NULL == id_of_stack || NULL == capacity)
         {
-                return TR_ERR_NULL;
+                return (TR_ERR_NULL);
         }
 
-        return id_of_stack->ops->capacity(id_of_stack, capacity);
+        return (id_of_stack->ops->capacity(id_of_stack, capacity));
 }

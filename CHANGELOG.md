@@ -28,10 +28,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.gitignore` — build output, IDE folders, and generated files
 - `.github/workflows/build_test.yml` — CI on Ubuntu and Windows, Debug and Release
 - `CHANGELOG.md`, `README.md`, `CONTRIBUTING.md`, `LICENSE`, `SECURITY.md` — project documentation stubs
-- `tr_types.h` — types support for the different c standards
-- `tr_export.h` — macros for controlling symbol visibility across platforms and build type
+- `tr_types.h` — portable C89/C99/C11 type definitions
+- `tr_export.h` — symbol visibility macros
 - `tr_datastructures.h` — file to include all the public api of the library
 - `tr_internal.h` — file for internal utility macros
+- `tr_result.h` — library wide error code enum
+- `tr_stack.h` — public stack API with array dynamic, array fixed and linked list variants
+- `tr_version.h` — CMake generated version header
+- `src/stack/stack.c` — array based stack implementation (dynamic and fixed)
+
 
 ---
 

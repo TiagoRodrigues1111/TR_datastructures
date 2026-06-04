@@ -53,6 +53,7 @@ jobs:
         run: >
           cmake -S . -B build
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DTR_BUILD_TESTS=ON
 
       # ------------------------------------------------------------------
       # 4. Build
