@@ -10,7 +10,7 @@ add_library(tr_datastructures::tr_datastructures ALIAS tr_datastructures)
 target_sources(tr_datastructures
     PRIVATE
         tr_datastructures.c
-        # stack/stack.c
+        stack/stack.c
 )
 
 # ------------------------------------------------------------------

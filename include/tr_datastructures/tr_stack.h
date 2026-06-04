@@ -57,7 +57,31 @@ extern "C"
  *******************************************************************************************************/
 struct stack;
 
+
+/*******************************************************************************************************
+*
+* TYPE NAME: tr_stack_type_t
+*
+* PURPOSE: Selects the underlying implementation used by the stack
+*
+* VALUES:
+*
+* VALUE                   DESCRIPTION
+* -----                   -----------
+* TR_STACK_ARRAY          Array based implementation - fixed capacity, fast access
+* TR_STACK_ARRAY_FIXED    Array based implementation - fixed capacity, returns FULL when capacity is reached
+* TR_STACK_LL             Linked list based implementation - dynamic growth, unbounded
+*
+*******************************************************************************************************/
+typedef enum tr_stack_type
+{
+    TR_STACK_ARRAY_DYNAMIC = 0,  /* grows automatically              */
+    TR_STACK_ARRAY_FIXED   = 1,  /* fixed capacity, returns FULL     */
+    TR_STACK_LL            = 2   /* linked list, unbounded           */
+} tr_stack_type_t;
+
 /*****************************************************/
+
 
 /* 5 global variable declarations */
 /*****************************************************/
@@ -67,7 +91,7 @@ struct stack;
 
 /******************************************************************
  *
- * FUNCTION NAME: stack_create
+ * FUNCTION NAME: tr_stack_create
  *
  * PURPOSE: Allocates the needed memory for the stack wanted
  *
@@ -77,23 +101,25 @@ struct stack;
  * --------                     ----            ---     ------------
  * size_of_datatype             size_t          I       Byte size of the datatype to store in the
  * stack elements_to_allocate   size_t          I       Initial number of elements to
+ * stack_type                   tr_stack_type_t I       Type of stack to create (array or linked list)
  * allocate id_of_stack         stack_t **      O       Pointer to pointer to receive the created
  *                                                       stack
  *
  * RETURNS: tr_result_t
  *   TR_OK               - Stack created successfully
  *   TR_ERR_NULL         - id_of_stack is NULL
- *   TR_ERR_INVALID      - size_of_datatype or elements_to_allocate is 0
+ *   TR_ERR_INVALID      - size_of_datatype or elements_to_allocate is 0, or unknown stack_type
  *   TR_ERR_ALLOC        - Memory allocation failed
  *
  *****************************************************************/
-TR_NODISCARD TR_API tr_result_t stack_create(const size_t size_of_datatype,
-                                             const size_t elements_to_allocate,
-                                             struct stack **id_of_stack);
+TR_NODISCARD TR_API tr_result_t tr_stack_create(size_t          size_of_datatype,
+                                              size_t          elements_to_allocate,
+                                              tr_stack_type_t stack_type,
+                                              struct stack  **id_of_stack);
 
 /******************************************************************
  *
- * FUNCTION NAME: stack_destroy
+ * FUNCTION NAME: tr_stack_destroy
  *
  * PURPOSE: Frees all memory associated with the stack instance
  *
@@ -109,11 +135,11 @@ TR_NODISCARD TR_API tr_result_t stack_create(const size_t size_of_datatype,
  *   TR_ERR_NULL         - id_of_stack or *id_of_stack is NULL
  *
  *****************************************************************/
-TR_NODISCARD TR_API tr_result_t stack_destroy(struct stack **id_of_stack);
+TR_NODISCARD TR_API tr_result_t tr_stack_destroy(struct stack **id_of_stack);
 
 /******************************************************************
  *
- * FUNCTION NAME: stack_push
+ * FUNCTION NAME: tr_stack_push
  *
  * PURPOSE: Pushes a element onto the top of the stack
  *
@@ -131,11 +157,11 @@ TR_NODISCARD TR_API tr_result_t stack_destroy(struct stack **id_of_stack);
  *   TR_ERR_FULL         - Stack is full (array based only)
  *
  *****************************************************************/
-TR_NODISCARD TR_API tr_result_t stack_push(struct stack *id_of_stack, const void *data_to_push);
+TR_NODISCARD TR_API tr_result_t tr_stack_push(struct stack *id_of_stack, const void *data_to_push);
 
 /******************************************************************
  *
- * FUNCTION NAME: stack_pop
+ * FUNCTION NAME: tr_stack_pop
  *
  * PURPOSE: Removes the element at the top of the stack
  *
@@ -151,11 +177,11 @@ TR_NODISCARD TR_API tr_result_t stack_push(struct stack *id_of_stack, const void
  *   TR_ERR_EMPTY        - Stack is empty
  *
  *****************************************************************/
-TR_NODISCARD TR_API tr_result_t stack_pop(struct stack *id_of_stack);
+TR_NODISCARD TR_API tr_result_t tr_stack_pop(struct stack *id_of_stack);
 
 /******************************************************************
  *
- * FUNCTION NAME: stack_top
+ * FUNCTION NAME: tr_stack_top
  *
  * PURPOSE: Copies the element at the top of the stack into the provided buffer
  *          Does not remove the element
@@ -175,11 +201,11 @@ TR_NODISCARD TR_API tr_result_t stack_pop(struct stack *id_of_stack);
  *   TR_ERR_EMPTY        - Stack is empty
  *
  *****************************************************************/
-TR_NODISCARD TR_API tr_result_t stack_top(const struct stack *id_of_stack, void *data_at_top);
+TR_NODISCARD TR_API tr_result_t tr_stack_top(const struct stack *id_of_stack, void *data_at_top);
 
 /******************************************************************
  *
- * FUNCTION NAME: stack_size
+ * FUNCTION NAME: tr_stack_size
  *
  * PURPOSE: Returns the current number of elements in the stack
  *
@@ -196,11 +222,11 @@ TR_NODISCARD TR_API tr_result_t stack_top(const struct stack *id_of_stack, void 
  *   TR_ERR_NULL         - id_of_stack or size is NULL
  *
  *****************************************************************/
-TR_NODISCARD TR_API tr_result_t stack_size(const struct stack *id_of_stack, size_t *size);
+TR_NODISCARD TR_API tr_result_t tr_stack_size(const struct stack *id_of_stack, size_t *size);
 
 /******************************************************************
  *
- * FUNCTION NAME: stack_is_empty
+ * FUNCTION NAME: tr_stack_is_empty
  *
  * PURPOSE: Checks whether the stack contains no elements
  *
@@ -217,11 +243,11 @@ TR_NODISCARD TR_API tr_result_t stack_size(const struct stack *id_of_stack, size
  *   TR_ERR_NULL         - id_of_stack or is_empty is NULL
  *
  *****************************************************************/
-TR_NODISCARD TR_API tr_result_t stack_is_empty(const struct stack *id_of_stack, bool *is_empty);
+TR_NODISCARD TR_API tr_result_t tr_stack_is_empty(const struct stack *id_of_stack, bool *is_empty);
 
 /******************************************************************
  *
- * FUNCTION NAME: stack_capacity
+ * FUNCTION NAME: tr_stack_capacity
  *
  * PURPOSE: Returns the total allocated capacity of the stack
  *          For linked list based stacks this is the same as stack_size
@@ -238,7 +264,7 @@ TR_NODISCARD TR_API tr_result_t stack_is_empty(const struct stack *id_of_stack, 
  *   TR_ERR_NULL         - id_of_stack or capacity is NULL
  *
  *****************************************************************/
-TR_NODISCARD TR_API tr_result_t stack_capacity(const struct stack *id_of_stack, size_t *capacity);
+TR_NODISCARD TR_API tr_result_t tr_stack_capacity(const struct stack *id_of_stack, size_t *capacity);
 
 /*****************************************************/
 
