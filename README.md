@@ -8,7 +8,8 @@ This is mostly refactoring by old library which has become quite unwieldy + addi
 
 Goal:
 
-- Make use of #defines for error logging
+- Make use of defines for error logging
 - Use best practices from programming
 - Make it portable
 - Make sure this is correct for C89 standard as well
+

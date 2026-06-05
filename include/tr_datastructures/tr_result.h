@@ -1,3 +1,8 @@
+/**
+ * @file tr_result.h
+ * @brief Library wide error code definitions for the tr_datastructures library
+ */
+
 /*******************************************************************************************************
  * NAME: tr_result.h
  *
@@ -42,38 +47,36 @@ extern "C"
 /* 4 typedefs */
 /*****************************************************/
 
-/*******************************************************************************************************
+/**
+ * @brief Library wide error code returned by all API functions
  *
- * TYPE NAME: tr_result_t
+ * Every public API function returns a value of this type.
+ * @c TR_OK indicates success. Any other value indicates a specific
+ * failure condition that the caller should handle.
  *
- * PURPOSE: Library wide error code type returned by all API functions
+ * Example usage:
+ * @code
+ * struct stack  *p_stack = NULL;
+ * tr_result_t    res     = TR_OK;
  *
- * VALUES:
- *
- * VALUE                   DESCRIPTION
- * -----                   -----------
- * TR_OK                   Operation completed successfully
- * TR_ERR_NULL             NULL pointer passed where a valid pointer was expected
- * TR_ERR_ALLOC            Memory allocation failed
- * TR_ERR_EMPTY            Operation failed because the structure is empty
- * TR_ERR_FULL             Operation failed because the structure is full (might never happen, depending on implementation)
- * TR_ERR_INVALID          Invalid argument passed (e.g. size of 0)
- * TR_ERR_NOT_FOUND        Element not found in the structure
- * TR_ERR_DUPLICATE        Duplicate element detected
- * TR_ERR_OUT_OF_RANGE     Index or position is out of valid range
- *
- *******************************************************************************************************/
+ * res = tr_stack_create(sizeof(int), 10, TR_STACK_ARRAY_DYNAMIC, &p_stack);
+ * if (TR_OK != res)
+ * {
+ *     // handle error
+ * }
+ * @endcode
+ */
 typedef enum tr_result
 {
-        TR_OK = 0,
-        TR_ERR_NULL = 1,
-        TR_ERR_ALLOC = 2,
-        TR_ERR_EMPTY = 3,
-        TR_ERR_FULL = 4,
-        TR_ERR_INVALID = 5,
-        TR_ERR_NOT_FOUND = 6,
-        TR_ERR_DUPLICATE = 7,
-        TR_ERR_OUT_OF_RANGE = 8
+        TR_OK = 0,              /**< Operation completed successfully                   */
+        TR_ERR_NULL = 1,        /**< NULL pointer passed where a valid pointer expected */
+        TR_ERR_ALLOC = 2,       /**< Memory allocation failed                           */
+        TR_ERR_EMPTY = 3,       /**< Operation failed because structure is empty        */
+        TR_ERR_FULL = 4,        /**< Operation failed because structure is full         */
+        TR_ERR_INVALID = 5,     /**< Invalid argument (e.g. size of 0)                  */
+        TR_ERR_NOT_FOUND = 6,   /**< Element not found in the structure                 */
+        TR_ERR_DUPLICATE = 7,   /**< Duplicate element detected                         */
+        TR_ERR_OUT_OF_RANGE = 8 /**< Index or position is out of valid range            */
 } tr_result_t;
 
 /*****************************************************/

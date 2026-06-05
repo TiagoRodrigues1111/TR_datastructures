@@ -1,3 +1,13 @@
+/**
+ * @file tr_types.h
+ * @brief Portable type definitions for C89/C99/C11 compatibility
+ *
+ * Provides fixed width integer types, bool, and NULL for use across
+ * all C standards. On C99 and later the standard headers are used
+ * directly. On C89 portable fallbacks are provided with compile time
+ * size verification.
+ */
+
 /*******************************************************************************************************
  * NAME: tr_types.h
  *
@@ -39,6 +49,22 @@ extern "C"
 /* ------------------------------------------------------------------
  * 2.1 Compile-time assert
  * ------------------------------------------------------------------ */
+
+/**
+ * @brief Compile time assertion macro
+ *
+ * Triggers a compile error if @p condition is false.
+ * On C11 and later uses @c _Static_assert. On C89/C99 uses
+ * the array size trick.
+ *
+ * @param condition Expression to evaluate at compile time
+ * @param message   Token used as the error identifier — no spaces allowed
+ *
+ * Example usage:
+ * @code
+ * TR_STATIC_ASSERT(sizeof(int) == 4, int_must_be_4_bytes);
+ * @endcode
+ */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /* C11 - native static assert */
 #define TR_STATIC_ASSERT(condition, message) _Static_assert((condition), #message)
@@ -51,6 +77,15 @@ extern "C"
 /* ------------------------------------------------------------------
  * 2.2 bool
  * ------------------------------------------------------------------ */
+
+/**
+ * @brief Boolean type
+ *
+ * On C++ uses the native bool type.
+ * On C99 and later includes @c stdbool.h.
+ * On C89 provides a portable enum fallback with values
+ * @c false = 0 and @c true = 1, matching C99 exactly.
+ */
 #if defined(__cplusplus)
 /* C++ has native bool */
 #elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
@@ -60,14 +95,37 @@ extern "C"
 /* C89 fallback - matches C99 stdbool.h values exactly */
 typedef enum
 {
-        false = 0,
-        true = 1
+        false = 0, /**< Boolean false value - evaluates to 0 */
+        true = 1   /**< Boolean true value  - evaluates to 1 */
 } bool;
 #endif
 
 /* ------------------------------------------------------------------
  * 2.3 Fixed width integers
  * ------------------------------------------------------------------ */
+
+/**
+ * @defgroup tr_types_integers Fixed Width Integer Types
+ * @{
+ *
+ * @brief Portable fixed width integer types
+ *
+ * On C99 and later these are provided by @c stdint.h directly.
+ * On C89 portable fallbacks are detected at compile time using
+ * @c limits.h constants. A compile time assertion verifies the
+ * correct size on each platform.
+ *
+ * | Type      | Size   | Range                        |
+ * |-----------|--------|------------------------------|
+ * | uint8_t   | 1 byte | 0 to 255                     |
+ * | int8_t    | 1 byte | -128 to 127                  |
+ * | uint16_t  | 2 byte | 0 to 65535                   |
+ * | int16_t   | 2 byte | -32768 to 32767              |
+ * | uint32_t  | 4 byte | 0 to 4294967295              |
+ * | int32_t   | 4 byte | -2147483648 to 2147483647    |
+ * | uint64_t  | 8 byte | 0 to 18446744073709551615    |
+ * | int64_t   | 8 byte | -9223372036854775808 to max  |
+ */
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 /* C99 or later - use standard stdint.h */
 #include <stdint.h>
@@ -126,6 +184,14 @@ typedef signed long int64_t;
 /* ------------------------------------------------------------------
  * 2.4 NULL
  * ------------------------------------------------------------------ */
+
+/**
+ * @brief Null pointer constant
+ *
+ * Defined as @c 0 for C++ (where void* does not implicitly convert)
+ * and as @c ((void*)0) for C. Only defined if not already provided
+ * by an included system header.
+ */
 #ifndef NULL
 #ifdef __cplusplus
 #define NULL 0
@@ -134,7 +200,7 @@ typedef signed long int64_t;
 #endif
 #endif
 
-        // clang-format off
+// clang-format off
 
 /*****************************************************/
 
@@ -154,7 +220,7 @@ typedef signed long int64_t;
 /*****************************************************/
 /*****************************************************/
 
-        // clang-format on
+// clang-format on
 
 #ifdef __cplusplus
 }

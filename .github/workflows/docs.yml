@@ -1,0 +1,62 @@
+# ------------------------------------------------------------------
+# docs.yml
+# Generates and publishes Doxygen documentation to GitHub Pages
+# ------------------------------------------------------------------
+
+name: Documentation
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages:    write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    name: Generate and publish documentation
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url:  ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      # ------------------------------------------------------------------
+      # 1. Checkout
+      # ------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ------------------------------------------------------------------
+      # 2. Install Doxygen
+      # ------------------------------------------------------------------
+      - name: Install Doxygen
+        run: sudo apt-get install -y doxygen
+
+      # ------------------------------------------------------------------
+      # 3. Generate documentation
+      # ------------------------------------------------------------------
+      - name: Generate Doxygen documentation
+        run: doxygen docs/Doxyfile
+
+      # ------------------------------------------------------------------
+      # 4. Upload pages artifact
+      # ------------------------------------------------------------------
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/output/html
+
+      # ------------------------------------------------------------------
+      # 5. Deploy to GitHub Pages
+      # ------------------------------------------------------------------
+      - name: Deploy to GitHub Pages
+        id:   deployment
+        uses: actions/deploy-pages@v4
