@@ -58,13 +58,14 @@
 /*****************************************************/
 static struct stack *gp_stack_dynamic = NULL;
 static struct stack *gp_stack_fixed = NULL;
+static struct stack *gp_stack_ll = NULL;
+
 /*****************************************************/
 
 /* 6 function prototypes */
 /*****************************************************/
 void setUp(void);
 void tearDown(void);
-
 
 void test_tr_stack_create_dynamic_returns_ok(void);
 void test_tr_stack_create_fixed_returns_ok(void);
@@ -107,7 +108,21 @@ void test_tr_stack_capacity_returns_err_null_on_null_output(void);
 void test_tr_stack_lifo_order_is_correct(void);
 void test_tr_stack_push_pop_multiple_types(void);
 
-
+/* tr_stack_ll specific */
+void test_tr_stack_create_ll_returns_ok(void);
+void test_tr_stack_ll_push_returns_ok(void);
+void test_tr_stack_ll_push_grows_unbounded(void);
+void test_tr_stack_ll_pop_returns_ok(void);
+void test_tr_stack_ll_pop_returns_err_empty(void);
+void test_tr_stack_ll_top_returns_correct_value(void);
+void test_tr_stack_ll_top_returns_err_empty(void);
+void test_tr_stack_ll_size_equals_push_count(void);
+void test_tr_stack_ll_capacity_equals_size(void);
+void test_tr_stack_ll_is_empty_returns_true_on_empty(void);
+void test_tr_stack_ll_is_empty_returns_false_after_push(void);
+void test_tr_stack_ll_destroy_sets_pointer_to_null(void);
+void test_tr_stack_ll_destroy_with_elements(void);
+void test_tr_stack_ll_lifo_order_is_correct(void);
 
 /*****************************************************/
 
@@ -127,6 +142,7 @@ void setUp(void)
 {
         tr_stack_create(sizeof(int), TEST_CAPACITY, TR_STACK_ARRAY_DYNAMIC, &gp_stack_dynamic);
         tr_stack_create(sizeof(int), TEST_CAPACITY, TR_STACK_ARRAY_FIXED, &gp_stack_fixed);
+        tr_stack_create(sizeof(int), TEST_CAPACITY, TR_STACK_LL, &gp_stack_ll);
 }
 
 /*******************************************************************************************************
@@ -153,6 +169,12 @@ void tearDown(void)
         {
                 tr_stack_destroy(&gp_stack_fixed);
                 gp_stack_fixed = NULL;
+        }
+
+        if (NULL != gp_stack_ll)
+        {
+                tr_stack_destroy(&gp_stack_ll);
+                gp_stack_ll = NULL;
         }
 }
 
@@ -707,6 +729,219 @@ void test_tr_stack_push_pop_multiple_types(void)
 }
 
 /* ======================================================================
+ * tr_stack_ll specific tests
+ * ====================================================================== */
+
+void test_tr_stack_create_ll_returns_ok(void)
+{
+        struct stack *p_stack = NULL;
+        tr_result_t res = TR_OK;
+
+        res = tr_stack_create(sizeof(int), TEST_CAPACITY, TR_STACK_LL, &p_stack);
+
+        TEST_ASSERT_EQUAL(TR_OK, res);
+        TEST_ASSERT_NOT_NULL(p_stack);
+
+        (void) tr_stack_destroy(&p_stack);
+}
+
+void test_tr_stack_ll_push_returns_ok(void)
+{
+        tr_result_t res = TR_OK;
+        int val = TEST_VALUE_A;
+
+        res = tr_stack_push(gp_stack_ll, &val);
+
+        TEST_ASSERT_EQUAL(TR_OK, res);
+}
+
+void test_tr_stack_ll_push_grows_unbounded(void)
+{
+        /* local variables */
+        tr_result_t res = TR_OK;
+        int val = TEST_VALUE_A;
+        size_t i = 0u;
+
+        /* push far beyond initial capacity */
+        for (i = 0u; i < (TEST_CAPACITY * 4u); i++)
+        {
+                res = tr_stack_push(gp_stack_ll, &val);
+                TEST_ASSERT_EQUAL(TR_OK, res);
+        }
+}
+
+void test_tr_stack_ll_pop_returns_ok(void)
+{
+        tr_result_t res = TR_OK;
+        int val = TEST_VALUE_A;
+
+        (void) tr_stack_push(gp_stack_ll, &val);
+
+        res = tr_stack_pop(gp_stack_ll);
+
+        TEST_ASSERT_EQUAL(TR_OK, res);
+}
+
+void test_tr_stack_ll_pop_returns_err_empty(void)
+{
+        tr_result_t res = TR_OK;
+
+        res = tr_stack_pop(gp_stack_ll);
+
+        TEST_ASSERT_EQUAL(TR_ERR_EMPTY, res);
+}
+
+void test_tr_stack_ll_top_returns_correct_value(void)
+{
+        tr_result_t res = TR_OK;
+        int val = TEST_VALUE_A;
+        int out = 0;
+
+        (void) tr_stack_push(gp_stack_ll, &val);
+
+        res = tr_stack_top(gp_stack_ll, &out);
+
+        TEST_ASSERT_EQUAL(TR_OK, res);
+        TEST_ASSERT_EQUAL_INT(TEST_VALUE_A, out);
+}
+
+void test_tr_stack_ll_top_returns_err_empty(void)
+{
+        tr_result_t res = TR_OK;
+        int out = 0;
+
+        res = tr_stack_top(gp_stack_ll, &out);
+
+        TEST_ASSERT_EQUAL(TR_ERR_EMPTY, res);
+}
+
+void test_tr_stack_ll_size_equals_push_count(void)
+{
+        /* local variables */
+        tr_result_t res = TR_OK;
+        int val = TEST_VALUE_A;
+        size_t size = 0u;
+        size_t i = 0u;
+
+        for (i = 0u; i < TEST_CAPACITY; i++)
+        {
+                (void) tr_stack_push(gp_stack_ll, &val);
+        }
+
+        res = tr_stack_size(gp_stack_ll, &size);
+
+        TEST_ASSERT_EQUAL(TR_OK, res);
+        TEST_ASSERT_EQUAL_size_t(TEST_CAPACITY, size);
+}
+
+void test_tr_stack_ll_capacity_equals_size(void)
+{
+        /* local variables */
+        tr_result_t res = TR_OK;
+        int val = TEST_VALUE_A;
+        size_t size = 0u;
+        size_t capacity = 0u;
+        size_t i = 0u;
+
+        /* push several elements */
+        for (i = 0u; i < TEST_CAPACITY; i++)
+        {
+                (void) tr_stack_push(gp_stack_ll, &val);
+        }
+
+        (void) tr_stack_size(gp_stack_ll, &size);
+        res = tr_stack_capacity(gp_stack_ll, &capacity);
+
+        TEST_ASSERT_EQUAL(TR_OK, res);
+        TEST_ASSERT_EQUAL_size_t(size, capacity);
+}
+
+void test_tr_stack_ll_is_empty_returns_true_on_empty(void)
+{
+        tr_result_t res = TR_OK;
+        bool is_empty = false;
+
+        res = tr_stack_is_empty(gp_stack_ll, &is_empty);
+
+        TEST_ASSERT_EQUAL(TR_OK, res);
+        TEST_ASSERT_TRUE(is_empty);
+}
+
+void test_tr_stack_ll_is_empty_returns_false_after_push(void)
+{
+        tr_result_t res = TR_OK;
+        int val = TEST_VALUE_A;
+        bool is_empty = true;
+
+        (void) tr_stack_push(gp_stack_ll, &val);
+
+        res = tr_stack_is_empty(gp_stack_ll, &is_empty);
+
+        TEST_ASSERT_EQUAL(TR_OK, res);
+        TEST_ASSERT_FALSE(is_empty);
+}
+
+void test_tr_stack_ll_destroy_sets_pointer_to_null(void)
+{
+        struct stack *p_stack = NULL;
+        tr_result_t res = TR_OK;
+
+        (void) tr_stack_create(sizeof(int), TEST_CAPACITY, TR_STACK_LL, &p_stack);
+
+        res = tr_stack_destroy(&p_stack);
+
+        TEST_ASSERT_EQUAL(TR_OK, res);
+        TEST_ASSERT_NULL(p_stack);
+}
+
+void test_tr_stack_ll_destroy_with_elements(void)
+{
+        /* local variables */
+        struct stack *p_stack = NULL;
+        tr_result_t res = TR_OK;
+        int val = TEST_VALUE_A;
+        size_t i = 0u;
+
+        (void) tr_stack_create(sizeof(int), TEST_CAPACITY, TR_STACK_LL, &p_stack);
+
+        /* push several elements then destroy */
+        for (i = 0u; i < TEST_CAPACITY; i++)
+        {
+                (void) tr_stack_push(p_stack, &val);
+        }
+
+        res = tr_stack_destroy(&p_stack);
+
+        TEST_ASSERT_EQUAL(TR_OK, res);
+        TEST_ASSERT_NULL(p_stack);
+}
+
+void test_tr_stack_ll_lifo_order_is_correct(void)
+{
+        /* local variables */
+        int val_a = TEST_VALUE_A;
+        int val_b = TEST_VALUE_B;
+        int val_c = TEST_VALUE_C;
+        int out = 0;
+
+        (void) tr_stack_push(gp_stack_ll, &val_a);
+        (void) tr_stack_push(gp_stack_ll, &val_b);
+        (void) tr_stack_push(gp_stack_ll, &val_c);
+
+        (void) tr_stack_top(gp_stack_ll, &out);
+        TEST_ASSERT_EQUAL_INT(TEST_VALUE_C, out);
+        (void) tr_stack_pop(gp_stack_ll);
+
+        (void) tr_stack_top(gp_stack_ll, &out);
+        TEST_ASSERT_EQUAL_INT(TEST_VALUE_B, out);
+        (void) tr_stack_pop(gp_stack_ll);
+
+        (void) tr_stack_top(gp_stack_ll, &out);
+        TEST_ASSERT_EQUAL_INT(TEST_VALUE_A, out);
+        (void) tr_stack_pop(gp_stack_ll);
+}
+
+/* ======================================================================
  * main - test runner
  * ====================================================================== */
 
@@ -771,6 +1006,22 @@ int main(void)
         /* integration */
         RUN_TEST(test_tr_stack_lifo_order_is_correct);
         RUN_TEST(test_tr_stack_push_pop_multiple_types);
+
+        /* tr_stack_ll specific */
+        RUN_TEST(test_tr_stack_create_ll_returns_ok);
+        RUN_TEST(test_tr_stack_ll_push_returns_ok);
+        RUN_TEST(test_tr_stack_ll_push_grows_unbounded);
+        RUN_TEST(test_tr_stack_ll_pop_returns_ok);
+        RUN_TEST(test_tr_stack_ll_pop_returns_err_empty);
+        RUN_TEST(test_tr_stack_ll_top_returns_correct_value);
+        RUN_TEST(test_tr_stack_ll_top_returns_err_empty);
+        RUN_TEST(test_tr_stack_ll_size_equals_push_count);
+        RUN_TEST(test_tr_stack_ll_capacity_equals_size);
+        RUN_TEST(test_tr_stack_ll_is_empty_returns_true_on_empty);
+        RUN_TEST(test_tr_stack_ll_is_empty_returns_false_after_push);
+        RUN_TEST(test_tr_stack_ll_destroy_sets_pointer_to_null);
+        RUN_TEST(test_tr_stack_ll_destroy_with_elements);
+        RUN_TEST(test_tr_stack_ll_lifo_order_is_correct);
 
         return UNITY_END();
 }
