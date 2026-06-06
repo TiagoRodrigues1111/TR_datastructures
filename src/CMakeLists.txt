@@ -9,8 +9,10 @@ add_library(tr_datastructures::tr_datastructures ALIAS tr_datastructures)
 # ------------------------------------------------------------------
 target_sources(tr_datastructures
     PRIVATE
-        tr_datastructures.c
         stack/stack.c
+        stack/stack_array.c
+        stack/stack_ll.c
+        tr_datastructures.c
 )
 
 # ------------------------------------------------------------------
@@ -23,6 +25,7 @@ target_include_directories(tr_datastructures
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/internal/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/stack
 )
 
 # ------------------------------------------------------------------
