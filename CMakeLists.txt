@@ -53,8 +53,10 @@ include(GNUInstallDirs)
 
 configure_file(
     cmake/tr_version.h.in
-    include/tr_datastructures/tr_version.h
+    ${PROJECT_SOURCE_DIR}/include/tr_datastructures/tr_version.h
 )
+
+include_directories(${PROJECT_BINARY_DIR}/include)
 
 add_subdirectory(src)
 
@@ -99,6 +101,6 @@ install(
 )
 install(
     FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/include/tr_datastructures/tr_version.h"
+        "${PROJECT_SOURCE_DIR}/include/tr_datastructures/tr_version.h"
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/tr_datastructures"
 )
