@@ -143,8 +143,10 @@ static tr_result_t stack_array_dynamic_push(struct stack *id_of_stack, const voi
 
                 if (NULL == p_new_data)
                 {
+                        /* LCOV_EXCL_START */
                         fprintf(stderr, "[TR] stack_array_push: realloc failed\n");
                         return (TR_ERR_ALLOC);
+                        /* LCOV_EXCL_STOP */
                 }
 
                 p_data->stack_data = p_new_data;
@@ -492,28 +494,34 @@ tr_result_t tr_stack_array_create(size_t size_of_datatype,
         p_stack = (struct stack *) malloc(sizeof(struct stack));
         if (NULL == p_stack)
         {
+                /* LCOV_EXCL_START */
                 fprintf(stderr, "[TR] tr_stack_array_create: malloc failed for stack handle\n");
                 return (TR_ERR_ALLOC);
+                /* LCOV_EXCL_STOP */
         }
 
         /* allocate implementation data */
         p_data = (struct tr_stack_array_data *) malloc(sizeof(struct tr_stack_array_data));
         if (NULL == p_data)
         {
+                /* LCOV_EXCL_START */
                 fprintf(stderr,
                         "[TR] tr_stack_array_create: malloc failed for implementation data\n");
                 free(p_stack);
                 return (TR_ERR_ALLOC);
+                /* LCOV_EXCL_STOP */
         }
 
         /* allocate data array */
         p_data->stack_data = malloc(elements_to_allocate * size_of_datatype);
         if (NULL == p_data->stack_data)
         {
+                /* LCOV_EXCL_START */
                 fprintf(stderr, "[TR] tr_stack_array_create: malloc failed for data array\n");
                 free(p_data);
                 free(p_stack);
                 return (TR_ERR_ALLOC);
+                /* LCOV_EXCL_STOP */
         }
 
         /* initialise implementation data */

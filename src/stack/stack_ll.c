@@ -169,11 +169,13 @@ static tr_result_t stack_ll_push(struct stack *id_of_stack, const void *data_to_
         /* allocate node with inline data */
         p_node = (struct tr_stack_ll_node *) malloc(STACK_LL_NODE_SIZE(p_data->size_of_datatype));
 
-        if (NULL == p_node)
+        if (NULL == p_node) 
         {
+                /* LCOV_EXCL_START */
                 fprintf(stderr, "[TR] stack_ll_push: malloc failed\n");
                 return (TR_ERR_ALLOC);
-        }
+                /* LCOV_EXCL_STOP */
+        } 
 
         /* copy data inline into node */
         memcpy(p_node->data, data_to_push, p_data->size_of_datatype);
@@ -488,17 +490,21 @@ tr_stack_ll_create(size_t size_of_datatype, size_t elements_to_allocate, struct 
         p_stack = (struct stack *) malloc(sizeof(struct stack));
         if (NULL == p_stack)
         {
+                /* LCOV_EXCL_START */
                 fprintf(stderr, "[TR] tr_stack_ll_create: malloc failed for stack handle\n");
                 return (TR_ERR_ALLOC);
+                /* LCOV_EXCL_STOP */
         }
 
         /* allocate implementation data */
         p_data = (struct tr_stack_ll_data *) malloc(sizeof(struct tr_stack_ll_data));
         if (NULL == p_data)
         {
+                /* LCOV_EXCL_START */
                 fprintf(stderr, "[TR] tr_stack_ll_create: malloc failed for implementation data\n");
                 free(p_stack);
                 return (TR_ERR_ALLOC);
+                /* LCOV_EXCL_STOP */
         }
 
         /* initialise implementation data */
