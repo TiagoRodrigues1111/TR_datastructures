@@ -9,9 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `src/stack/stack_shared.h` — internal shared definitions for stack implementations
+  (`struct stack`, `struct tr_stack_ops`) eliminating duplication between implementations
+- `src/stack/stack_array.c` — array based stack implementation extracted from `stack.c`
+  into its own file for clarity
+- `src/stack/stack_ll.c` — linked list based stack implementation using singly linked
+  list with inline data storage (`TR_STACK_LL`)
+- `TR_ASSERT` defensive assertions added throughout stack implementation files
+  covering pointer validity, size invariants and pre/post conditions
+- 14 additional unit tests for `TR_STACK_LL` bringing total to 54 tests
+
+### Changed
+- `src/stack/stack.c` — refactored to contain only public API dispatch functions,
+  implementation details moved to `stack_array.c` and `stack_ll.c`
+- `src/CMakeLists.txt` — updated to include `stack_array.c` and `stack_ll.c`
+- `tests/stack/test_stack.c` — added linked list stack tests
+- `examples/stack/example_stack.c` — fixed `%zu` format specifier for MinGW compatibility
+
 ---
 
-## [0.1.0] - 2026-05-24
+## [0.1.0] - 2026-06-07
 
 ### Added
 

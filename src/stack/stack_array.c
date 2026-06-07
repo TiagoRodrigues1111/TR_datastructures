@@ -1,39 +1,36 @@
 /*******************************************************************************************************
-* NAME: stack_array.c
-*
-* PURPOSE: Array based implementation of the stack data structure
-*          Supports both dynamic (auto-growing) and fixed capacity variants
-*
-* GLOBAL VARIABLES: None
-*
-* DEVELOPMENT HISTORY:
-*
-* Date          Author          Change Id       Release         Description Of Change
-* ----------    --------------- ---------       -------         -----------------------------------
-* 31-05-2026    Tiago Rodrigues                       1         File preparation
-*
-*******************************************************************************************************/
+ * NAME: stack_array.c
+ *
+ * PURPOSE: Array based implementation of the stack data structure
+ *          Supports both dynamic (auto-growing) and fixed capacity variants
+ *
+ * GLOBAL VARIABLES: None
+ *
+ * DEVELOPMENT HISTORY:
+ *
+ * Date          Author          Change Id       Release         Description Of Change
+ * ----------    --------------- ---------       -------         -----------------------------------
+ * 31-05-2026    Tiago Rodrigues                       1         File preparation
+ *
+ *******************************************************************************************************/
 
 /* 0 copyright/licensing */
 /*******************************************************************************************************
-*
-* This is free and unencumbered software released into the public domain (Unlicense).
-*
-********************************************************************************************************/
-
+ *
+ * This is free and unencumbered software released into the public domain (Unlicense).
+ *
+ ********************************************************************************************************/
 
 /* 1 includes */
 /*****************************************************/
-
-
 
 /* 1.1 Related header */
 #include "tr_datastructures/tr_stack.h"
 
 /* 1.2 C system headers */
-#include <stdlib.h> /* malloc, realloc, free    */
-#include <string.h> /* memcpy                   */
-#include <stdio.h>  /* fprintf, stderr          */
+#include <stdlib.h> /* malloc, realloc, free, abort    */
+#include <string.h> /* memcpy                          */
+#include <stdio.h>  /* fprintf, stderr                 */
 
 /* 1.3 C++ standard library headers*/
 
@@ -44,85 +41,83 @@
 #include "stack_shared.h"
 /*****************************************************/
 
-
 /* 2 defines */
 /*****************************************************/
 #define GROWTH_FACTOR 2u
-/*****************************************************/
 
+TR_INTERNAL_STATIC_ASSERT(GROWTH_FACTOR >= 2u, growth_factor_must_be_at_least_2);
+
+/*****************************************************/
 
 /* 3 external declarations */
 /*****************************************************/
 /*****************************************************/
 
-
 /* 4 typedefs */
 /*****************************************************/
 
 /*******************************************************************************************************
-*
-* TYPE NAME: struct tr_stack_array_data
-*
-* PURPOSE: Internal data for the array based stack implementation
-*
-* MEMBERS:
-*
-* MEMBER               TYPE        DESCRIPTION
-* ------               ----        -----------
-* stack_data           void *      Pointer to the allocated array of elements
-* stack_size           size_t      Current number of elements in the stack
-* capacity             size_t      Total number of elements allocated
-* size_of_datatype     size_t      Byte size of each element
-*
-*******************************************************************************************************/
+ *
+ * TYPE NAME: struct tr_stack_array_data
+ *
+ * PURPOSE: Internal data for the array based stack implementation
+ *
+ * MEMBERS:
+ *
+ * MEMBER               TYPE        DESCRIPTION
+ * ------               ----        -----------
+ * stack_data           void *      Pointer to the allocated array of elements
+ * stack_size           size_t      Current number of elements in the stack
+ * capacity             size_t      Total number of elements allocated
+ * size_of_datatype     size_t      Byte size of each element
+ *
+ *******************************************************************************************************/
 struct tr_stack_array_data
 {
-    void   *stack_data;
-    size_t  stack_size;
-    size_t  capacity;
-    size_t  size_of_datatype;
+        void *stack_data;
+        size_t stack_size;
+        size_t capacity;
+        size_t size_of_datatype;
 };
 
 /*****************************************************/
-
 
 /* 5 global variable declarations */
 /*****************************************************/
 /*****************************************************/
 
-
 /* 6 function prototypes */
 /*****************************************************/
 static tr_result_t stack_array_dynamic_push(struct stack *id_of_stack, const void *data_to_push);
-static tr_result_t stack_array_fixed_push  (struct stack *id_of_stack, const void *data_to_push);
-static tr_result_t stack_array_pop         (struct stack *id_of_stack);
-static tr_result_t stack_array_top         (const struct stack *id_of_stack, void *data_at_top);
-static tr_result_t stack_array_size        (const struct stack *id_of_stack, size_t *size);
-static tr_result_t stack_array_is_empty    (const struct stack *id_of_stack, bool *is_empty);
-static tr_result_t stack_array_capacity    (const struct stack *id_of_stack, size_t *capacity);
-static tr_result_t stack_array_destroy     (struct stack **id_of_stack);
+static tr_result_t stack_array_fixed_push(struct stack *id_of_stack, const void *data_to_push);
+static tr_result_t stack_array_pop(struct stack *id_of_stack);
+static tr_result_t stack_array_top(const struct stack *id_of_stack, void *data_at_top);
+static tr_result_t stack_array_size(const struct stack *id_of_stack, size_t *size);
+static tr_result_t stack_array_is_empty(const struct stack *id_of_stack, bool *is_empty);
+static tr_result_t stack_array_capacity(const struct stack *id_of_stack, size_t *capacity);
+static tr_result_t stack_array_destroy(struct stack **id_of_stack);
+
 /*****************************************************/
 
-
 /*******************************************************************************************************
-*
-* FUNCTION NAME: stack_array_dynamic_push
-*
-* PURPOSE: Pushes data onto the dynamic array stack
-*          Grows the array by GROWTH_FACTOR if full
-*
-* ARGUMENTS:
-*
-* ARGUMENT             TYPE                I/O     DESCRIPTION
-* --------             ----                ---     ------------
-* id_of_stack          struct stack *      I/O     Pointer to the stack
-* data_to_push         const void *        I       Pointer to the data to copy
-*
-* RETURNS: tr_result_t
-*   TR_OK               - Data pushed successfully
-*   TR_ERR_ALLOC        - Memory reallocation failed
-*
-*******************************************************************************************************/
+ *
+ * FUNCTION NAME: stack_array_dynamic_push
+ *
+ * PURPOSE: Pushes data onto the dynamic array stack
+ *          Grows the array by GROWTH_FACTOR if full
+ *
+ * ARGUMENTS:
+ *
+ * ARGUMENT             TYPE                I/O     DESCRIPTION
+ * --------             ----                ---     ------------
+ * id_of_stack          struct stack *      I/O     Pointer to the stack
+ * data_to_push         const void *        I       Pointer to the data to copy
+ *
+ * RETURNS: tr_result_t
+ *   TR_OK               - Data pushed successfully
+ *   TR_ERR_ALLOC        - Memory reallocation failed
+ *
+ *******************************************************************************************************/
 static tr_result_t stack_array_dynamic_push(struct stack *id_of_stack, const void *data_to_push)
 {
         /* local variables */
@@ -130,7 +125,15 @@ static tr_result_t stack_array_dynamic_push(struct stack *id_of_stack, const voi
         void *p_new_data = NULL;                   /* pointer for realloc             */
         size_t new_cap = 0u;                       /* new capacity after growth       */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (struct tr_stack_array_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT(NULL != p_data->stack_data);
+        TR_ASSERT(p_data->size_of_datatype > 0u);
+        TR_ASSERT(p_data->capacity > 0u);
+        TR_ASSERT(p_data->stack_size <= p_data->capacity);
 
         /* grow array if full */
         if (p_data->stack_size == p_data->capacity)
@@ -158,7 +161,6 @@ static tr_result_t stack_array_dynamic_push(struct stack *id_of_stack, const voi
         return (TR_OK);
 }
 
-
 /*******************************************************************************************************
  *
  * FUNCTION NAME: stack_array_fixed_push
@@ -184,7 +186,15 @@ static tr_result_t stack_array_fixed_push(struct stack *id_of_stack, const void 
         /* local variables */
         struct tr_stack_array_data *p_data = NULL;
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (struct tr_stack_array_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT(NULL != p_data->stack_data);
+        TR_ASSERT(p_data->size_of_datatype > 0u);
+        TR_ASSERT(p_data->capacity > 0u);
+        TR_ASSERT(p_data->stack_size <= p_data->capacity);
 
         /* Return error if full */
         if (p_data->stack_size == p_data->capacity)
@@ -224,7 +234,13 @@ static tr_result_t stack_array_pop(struct stack *id_of_stack)
         /* local variables */
         struct tr_stack_array_data *p_data = NULL; /* pointer to implementation data */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (struct tr_stack_array_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT(NULL != p_data->stack_data);
+        TR_ASSERT(p_data->stack_size <= p_data->capacity);
 
         if (0u == p_data->stack_size)
         {
@@ -259,7 +275,14 @@ static tr_result_t stack_array_top(const struct stack *id_of_stack, void *data_a
         /* local variables */
         const struct tr_stack_array_data *p_data = NULL; /* pointer to implementation data */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (const struct tr_stack_array_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT(NULL != p_data->stack_data);
+        TR_ASSERT(p_data->size_of_datatype > 0u);
+        TR_ASSERT(p_data->stack_size <= p_data->capacity);
 
         if (0u == p_data->stack_size)
         {
@@ -296,7 +319,13 @@ static tr_result_t stack_array_size(const struct stack *id_of_stack, size_t *siz
         /* local variables */
         const struct tr_stack_array_data *p_data = NULL; /* pointer to implementation data */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (const struct tr_stack_array_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT(p_data->stack_size <= p_data->capacity);
+
         *size = p_data->stack_size;
 
         return (TR_OK);
@@ -324,7 +353,13 @@ static tr_result_t stack_array_is_empty(const struct stack *id_of_stack, bool *i
         /* local variables */
         const struct tr_stack_array_data *p_data = NULL; /* pointer to implementation data */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (const struct tr_stack_array_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT(p_data->stack_size <= p_data->capacity);
+
         *is_empty = (0u == p_data->stack_size);
 
         return (TR_OK);
@@ -352,7 +387,13 @@ static tr_result_t stack_array_capacity(const struct stack *id_of_stack, size_t 
         /* local variables */
         const struct tr_stack_array_data *p_data = NULL; /* pointer to implementation data */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (const struct tr_stack_array_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT(p_data->capacity > 0u);
+
         *capacity = p_data->capacity;
 
         return (TR_OK);
@@ -379,7 +420,13 @@ static tr_result_t stack_array_destroy(struct stack **id_of_stack)
         /* local variables */
         struct tr_stack_array_data *p_data = NULL; /* pointer to implementation data */
 
+        TR_ASSERT(NULL != id_of_stack);
+        TR_ASSERT(NULL != *id_of_stack);
+
         p_data = (struct tr_stack_array_data *) (*id_of_stack)->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT(NULL != p_data->stack_data);
 
         free(p_data->stack_data);
         p_data->stack_data = NULL;
@@ -391,9 +438,10 @@ static tr_result_t stack_array_destroy(struct stack **id_of_stack)
         free(*id_of_stack);
         *id_of_stack = NULL;
 
+        TR_ASSERT(NULL == *id_of_stack);
+
         return (TR_OK);
 }
-
 
 /*******************************************************************************************************
  *
@@ -411,79 +459,87 @@ static const struct tr_stack_ops k_stack_array_fixed_ops = {
 };
 
 /*******************************************************************************************************
-*
-* FUNCTION NAME: tr_stack_array_create
-*
-* PURPOSE: Allocates and initialises a new array based stack instance
-*          Called by tr_stack_create for TR_STACK_ARRAY_DYNAMIC and TR_STACK_ARRAY_FIXED
-*
-* ARGUMENTS:
-*
-* ARGUMENT                TYPE            I/O     DESCRIPTION
-* --------                ----            ---     ------------
-* size_of_datatype        size_t          I       Byte size of the datatype to store
-* elements_to_allocate    size_t          I       Initial number of elements to allocate
-* stack_type              tr_stack_type_t I       TR_STACK_ARRAY_DYNAMIC or TR_STACK_ARRAY_FIXED
-* id_of_stack             struct stack ** O       Pointer to pointer to receive the created stack
-*
-* RETURNS: tr_result_t
-*   TR_OK               - Stack created successfully
-*   TR_ERR_ALLOC        - Memory allocation failed
-*
-*******************************************************************************************************/
-tr_result_t tr_stack_array_create(size_t           size_of_datatype,
-                                size_t           elements_to_allocate,
-                                tr_stack_type_t  stack_type,
-                                struct stack   **id_of_stack)
+ *
+ * FUNCTION NAME: tr_stack_array_create
+ *
+ * PURPOSE: Allocates and initialises a new array based stack instance
+ *          Called by tr_stack_create for TR_STACK_ARRAY_DYNAMIC and TR_STACK_ARRAY_FIXED
+ *
+ * ARGUMENTS:
+ *
+ * ARGUMENT                TYPE            I/O     DESCRIPTION
+ * --------                ----            ---     ------------
+ * size_of_datatype        size_t          I       Byte size of the datatype to store
+ * elements_to_allocate    size_t          I       Initial number of elements to allocate
+ * stack_type              tr_stack_type_t I       TR_STACK_ARRAY_DYNAMIC or TR_STACK_ARRAY_FIXED
+ * id_of_stack             struct stack ** O       Pointer to pointer to receive the created stack
+ *
+ * RETURNS: tr_result_t
+ *   TR_OK               - Stack created successfully
+ *   TR_ERR_ALLOC        - Memory allocation failed
+ *
+ *******************************************************************************************************/
+tr_result_t tr_stack_array_create(size_t size_of_datatype,
+                                  size_t elements_to_allocate,
+                                  tr_stack_type_t stack_type,
+                                  struct stack **id_of_stack)
 {
-    /* local variables */
-    struct stack            *p_stack = NULL; /* pointer to new stack handle     */
-    struct tr_stack_array_data *p_data  = NULL; /* pointer to implementation data  */
+        /* local variables */
+        struct stack *p_stack = NULL;              /* pointer to new stack handle     */
+        struct tr_stack_array_data *p_data = NULL; /* pointer to implementation data  */
 
-    /* allocate stack handle */
-    p_stack = (struct stack *)malloc(sizeof(struct stack));
-    if (NULL == p_stack)
-    {
-        fprintf(stderr, "[TR] tr_stack_array_create: malloc failed for stack handle\n");
-        return (TR_ERR_ALLOC);
-    }
+        /* allocate stack handle */
+        p_stack = (struct stack *) malloc(sizeof(struct stack));
+        if (NULL == p_stack)
+        {
+                fprintf(stderr, "[TR] tr_stack_array_create: malloc failed for stack handle\n");
+                return (TR_ERR_ALLOC);
+        }
 
-    /* allocate implementation data */
-    p_data = (struct tr_stack_array_data *)malloc(sizeof(struct tr_stack_array_data));
-    if (NULL == p_data)
-    {
-        fprintf(stderr, "[TR] tr_stack_array_create: malloc failed for implementation data\n");
-        free(p_stack);
-        return (TR_ERR_ALLOC);
-    }
+        /* allocate implementation data */
+        p_data = (struct tr_stack_array_data *) malloc(sizeof(struct tr_stack_array_data));
+        if (NULL == p_data)
+        {
+                fprintf(stderr,
+                        "[TR] tr_stack_array_create: malloc failed for implementation data\n");
+                free(p_stack);
+                return (TR_ERR_ALLOC);
+        }
 
-    /* allocate data array */
-    p_data->stack_data = malloc(elements_to_allocate * size_of_datatype);
-    if (NULL == p_data->stack_data)
-    {
-        fprintf(stderr, "[TR] tr_stack_array_create: malloc failed for data array\n");
-        free(p_data);
-        free(p_stack);
-        return (TR_ERR_ALLOC);
-    }
+        /* allocate data array */
+        p_data->stack_data = malloc(elements_to_allocate * size_of_datatype);
+        if (NULL == p_data->stack_data)
+        {
+                fprintf(stderr, "[TR] tr_stack_array_create: malloc failed for data array\n");
+                free(p_data);
+                free(p_stack);
+                return (TR_ERR_ALLOC);
+        }
 
-    /* initialise implementation data */
-    p_data->stack_size       = 0u;
-    p_data->capacity         = elements_to_allocate;
-    p_data->size_of_datatype = size_of_datatype;
+        /* initialise implementation data */
+        p_data->stack_size = 0u;
+        p_data->capacity = elements_to_allocate;
+        p_data->size_of_datatype = size_of_datatype;
 
-    /* wire up correct dispatch table */
-    if (TR_STACK_ARRAY_DYNAMIC == stack_type)
-    {
-        p_stack->ops = &k_stack_array_dynamic_ops;
-    }
-    else
-    {
-        p_stack->ops = &k_stack_array_fixed_ops;
-    }
+        /* wire up correct dispatch table */
+        if (TR_STACK_ARRAY_DYNAMIC == stack_type)
+        {
+                p_stack->ops = &k_stack_array_dynamic_ops;
+        }
+        else
+        {
+                p_stack->ops = &k_stack_array_fixed_ops;
+        }
 
-    p_stack->impl = p_data;
-    *id_of_stack  = p_stack;
+        p_stack->impl = p_data;
+        *id_of_stack = p_stack;
 
-    return (TR_OK);
+        TR_ASSERT(NULL != p_stack->ops);
+        TR_ASSERT(NULL != p_stack->impl);
+        TR_ASSERT(NULL != p_data->stack_data);
+        TR_ASSERT(0u == p_data->stack_size);
+        TR_ASSERT(p_data->capacity == elements_to_allocate);
+        TR_ASSERT(p_data->size_of_datatype == size_of_datatype);
+
+        return (TR_OK);
 }

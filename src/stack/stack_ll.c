@@ -22,11 +22,20 @@
 
 /* 1 includes */
 /*****************************************************/
-#include <stdlib.h> /* malloc, free             */
+
+/* 1.1 Related header */
+#include "tr_datastructures/tr_stack.h"
+
+/* 1.2 C system headers */
+#include <stdlib.h> /* malloc, free, abort      */
 #include <string.h> /* memcpy                   */
 #include <stdio.h>  /* fprintf, stderr          */
 
-#include "tr_datastructures/tr_stack.h"
+/* 1.3 C++ standard library headers*/
+
+/* 1.4 other libraries' headers*/
+
+/* 1.5 project's headers */
 #include "tr_internal.h"
 #include "stack_shared.h"
 
@@ -105,7 +114,6 @@ struct tr_stack_ll_data
         size_t size_of_datatype;
 };
 
-
 /*****************************************************/
 
 /* 5 global variable declarations */
@@ -149,7 +157,14 @@ static tr_result_t stack_ll_push(struct stack *id_of_stack, const void *data_to_
         struct tr_stack_ll_data *p_data = NULL; /* pointer to implementation data   */
         struct tr_stack_ll_node *p_node = NULL; /* pointer to new node              */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (struct tr_stack_ll_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT(p_data->size_of_datatype > 0u);
+        TR_ASSERT((0u == p_data->stack_size) || (NULL != p_data->top));
+        TR_ASSERT((0u != p_data->stack_size) || (NULL == p_data->top));
 
         /* allocate node with inline data */
         p_node = (struct tr_stack_ll_node *) malloc(STACK_LL_NODE_SIZE(p_data->size_of_datatype));
@@ -168,6 +183,11 @@ static tr_result_t stack_ll_push(struct stack *id_of_stack, const void *data_to_
         p_data->top = p_node;
 
         p_data->stack_size++;
+
+        TR_ASSERT(NULL != p_data->top);
+        TR_ASSERT(p_data->stack_size > 0u);
+        TR_ASSERT((0u == p_data->stack_size) || (NULL != p_data->top));
+        TR_ASSERT((0u != p_data->stack_size) || (NULL == p_data->top));
 
         return (TR_OK);
 }
@@ -195,7 +215,13 @@ static tr_result_t stack_ll_pop(struct stack *id_of_stack)
         struct tr_stack_ll_data *p_data = NULL;    /* pointer to implementation data   */
         struct tr_stack_ll_node *p_old_top = NULL; /* pointer to node being removed    */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (struct tr_stack_ll_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT((0u == p_data->stack_size) || (NULL != p_data->top));
+        TR_ASSERT((0u != p_data->stack_size) || (NULL == p_data->top));
 
         if (0u == p_data->stack_size)
         {
@@ -211,6 +237,9 @@ static tr_result_t stack_ll_pop(struct stack *id_of_stack)
         free(p_old_top);
 
         p_data->stack_size--;
+
+        TR_ASSERT((0u == p_data->stack_size) || (NULL != p_data->top));
+        TR_ASSERT((0u != p_data->stack_size) || (NULL == p_data->top));
 
         return (TR_OK);
 }
@@ -238,7 +267,14 @@ static tr_result_t stack_ll_top(const struct stack *id_of_stack, void *data_at_t
         /* local variables */
         const struct tr_stack_ll_data *p_data = NULL; /* pointer to implementation data */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (const struct tr_stack_ll_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT(p_data->size_of_datatype > 0u);
+        TR_ASSERT((0u == p_data->stack_size) || (NULL != p_data->top));
+        TR_ASSERT((0u != p_data->stack_size) || (NULL == p_data->top));
 
         if (0u == p_data->stack_size)
         {
@@ -272,7 +308,12 @@ static tr_result_t stack_ll_size(const struct stack *id_of_stack, size_t *size)
         /* local variables */
         const struct tr_stack_ll_data *p_data = NULL; /* pointer to implementation data */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (const struct tr_stack_ll_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+
         *size = p_data->stack_size;
 
         return (TR_OK);
@@ -300,7 +341,14 @@ static tr_result_t stack_ll_is_empty(const struct stack *id_of_stack, bool *is_e
         /* local variables */
         const struct tr_stack_ll_data *p_data = NULL; /* pointer to implementation data */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (const struct tr_stack_ll_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+        TR_ASSERT((0u == p_data->stack_size) || (NULL != p_data->top));
+        TR_ASSERT((0u != p_data->stack_size) || (NULL == p_data->top));
+
         *is_empty = (0u == p_data->stack_size);
 
         return (TR_OK);
@@ -330,7 +378,12 @@ static tr_result_t stack_ll_capacity(const struct stack *id_of_stack, size_t *ca
         /* local variables */
         const struct tr_stack_ll_data *p_data = NULL; /* pointer to implementation data */
 
+        TR_ASSERT(NULL != id_of_stack);
+
         p_data = (const struct tr_stack_ll_data *) id_of_stack->impl;
+
+        TR_ASSERT(NULL != p_data);
+
         *capacity = p_data->stack_size;
 
         return (TR_OK);
@@ -359,10 +412,17 @@ static tr_result_t stack_ll_destroy(struct stack **id_of_stack)
         struct tr_stack_ll_node *p_current = NULL; /* pointer to current node          */
         struct tr_stack_ll_node *p_next = NULL;    /* pointer to next node             */
 
+        TR_ASSERT(NULL != id_of_stack);
+        TR_ASSERT(NULL != (*id_of_stack));
+
         p_data = (struct tr_stack_ll_data *) (*id_of_stack)->impl;
+
+        TR_ASSERT(NULL != p_data);
 
         /* free all nodes */
         p_current = p_data->top;
+        p_data->top = NULL;
+
         while (NULL != p_current)
         {
                 p_next = p_current->next;
@@ -371,8 +431,10 @@ static tr_result_t stack_ll_destroy(struct stack **id_of_stack)
                 p_current = p_next;
         }
 
+        TR_ASSERT(NULL == p_data->top);
+        TR_ASSERT(NULL == p_current);
+
         /* zero and free implementation data */
-        p_data->top = NULL;
         p_data->stack_size = 0u;
         p_data->size_of_datatype = 0u;
 
@@ -380,6 +442,7 @@ static tr_result_t stack_ll_destroy(struct stack **id_of_stack)
         free(*id_of_stack);
         *id_of_stack = NULL;
 
+        TR_ASSERT(NULL == *id_of_stack);
         return (TR_OK);
 }
 
@@ -389,9 +452,9 @@ static tr_result_t stack_ll_destroy(struct stack **id_of_stack)
  *
  *******************************************************************************************************/
 static const struct tr_stack_ops k_stack_ll_ops = { stack_ll_push,     stack_ll_pop,
-                                                 stack_ll_top,      stack_ll_size,
-                                                 stack_ll_is_empty, stack_ll_capacity,
-                                                 stack_ll_destroy };
+                                                    stack_ll_top,      stack_ll_size,
+                                                    stack_ll_is_empty, stack_ll_capacity,
+                                                    stack_ll_destroy };
 
 /*******************************************************************************************************
  *
@@ -413,14 +476,12 @@ static const struct tr_stack_ops k_stack_ll_ops = { stack_ll_push,     stack_ll_
  *   TR_ERR_ALLOC        - Memory allocation failed
  *
  *******************************************************************************************************/
-tr_result_t tr_stack_ll_create(size_t           size_of_datatype,
-                                size_t           elements_to_allocate,
-                                struct stack   **id_of_stack)
+tr_result_t
+tr_stack_ll_create(size_t size_of_datatype, size_t elements_to_allocate, struct stack **id_of_stack)
 {
-
         TR_UNUSED(elements_to_allocate);
         /* local variables */
-        struct stack *p_stack = NULL;        /* pointer to new stack handle      */
+        struct stack *p_stack = NULL;           /* pointer to new stack handle      */
         struct tr_stack_ll_data *p_data = NULL; /* pointer to implementation data   */
 
         /* allocate stack handle */
@@ -448,6 +509,12 @@ tr_result_t tr_stack_ll_create(size_t           size_of_datatype,
         /* wire up dispatch table and implementation data */
         p_stack->ops = &k_stack_ll_ops;
         p_stack->impl = p_data;
+
+        TR_ASSERT(NULL != p_stack->ops);
+        TR_ASSERT(NULL != p_stack->impl);
+        TR_ASSERT(NULL == p_data->top);
+        TR_ASSERT(0u == p_data->stack_size);
+        TR_ASSERT(p_data->size_of_datatype == size_of_datatype);
 
         *id_of_stack = p_stack;
 

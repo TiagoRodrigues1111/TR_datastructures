@@ -28,6 +28,8 @@
 #include "tr_datastructures/tr_stack.h"
 
 /* 1.2 C system headers */
+#include <stdio.h>  /* fprintf — used by TR_ASSERT  */
+#include <stdlib.h> /* abort   — used by TR_ASSERT  */
 
 /* 1.3 C++ standard library headers*/
 
@@ -140,6 +142,9 @@ tr_result_t tr_stack_destroy(struct stack **id_of_stack)
                 return (TR_ERR_NULL);
         }
 
+        TR_ASSERT(NULL != (*id_of_stack)->ops);
+        TR_ASSERT(NULL != (*id_of_stack)->ops->destroy);
+
         return ((*id_of_stack)->ops->destroy(id_of_stack));
 }
 
@@ -173,6 +178,9 @@ tr_result_t tr_stack_push(struct stack *id_of_stack, const void *data_to_push)
                 return (TR_ERR_NULL);
         }
 
+        TR_ASSERT(NULL != id_of_stack->ops);
+        TR_ASSERT(NULL != id_of_stack->ops->push);
+
         return (id_of_stack->ops->push(id_of_stack, data_to_push));
 }
 
@@ -203,6 +211,9 @@ tr_result_t tr_stack_pop(struct stack *id_of_stack)
         {
                 return (TR_ERR_NULL);
         }
+
+        TR_ASSERT(NULL != id_of_stack->ops);
+        TR_ASSERT(NULL != id_of_stack->ops->pop);
 
         return (id_of_stack->ops->pop(id_of_stack));
 }
@@ -236,6 +247,9 @@ tr_result_t tr_stack_top(const struct stack *id_of_stack, void *data_at_top)
                 return (TR_ERR_NULL);
         }
 
+        TR_ASSERT(NULL != id_of_stack->ops);
+        TR_ASSERT(NULL != id_of_stack->ops->top);
+
         return (id_of_stack->ops->top(id_of_stack, data_at_top));
 }
 
@@ -266,6 +280,9 @@ tr_result_t tr_stack_size(const struct stack *id_of_stack, size_t *size)
         {
                 return (TR_ERR_NULL);
         }
+
+        TR_ASSERT(NULL != id_of_stack->ops);
+        TR_ASSERT(NULL != id_of_stack->ops->is_empty);
 
         return (id_of_stack->ops->size(id_of_stack, size));
 }
@@ -298,6 +315,9 @@ tr_result_t tr_stack_is_empty(const struct stack *id_of_stack, bool *is_empty)
                 return (TR_ERR_NULL);
         }
 
+        TR_ASSERT(NULL != id_of_stack->ops);
+        TR_ASSERT(NULL != id_of_stack->ops->capacity);
+
         return (id_of_stack->ops->is_empty(id_of_stack, is_empty));
 }
 
@@ -328,6 +348,9 @@ tr_result_t tr_stack_capacity(const struct stack *id_of_stack, size_t *capacity)
         {
                 return (TR_ERR_NULL);
         }
+
+        TR_ASSERT(NULL != id_of_stack->ops);
+        TR_ASSERT(NULL != id_of_stack->ops->capacity);
 
         return (id_of_stack->ops->capacity(id_of_stack, capacity));
 }
