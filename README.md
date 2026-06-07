@@ -24,7 +24,7 @@ A generic, portable C data structures library with support for multiple underlyi
 
 | Structure | Array Dynamic | Array Fixed | Linked List | Status      |
 |-----------|--------------|-------------|-------------|-------------|
-| Stack     | ✅           | ✅          | 🔄          | In progress |
+| Stack     | ✅           | ✅          | ✅          | Completed   |
 | Queue     | ⬜           | ⬜          | ⬜          | Planned     |
 
 ---
