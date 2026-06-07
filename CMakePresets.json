@@ -78,7 +78,21 @@
                 "CMAKE_C_FLAGS": "-fsanitize=undefined -fno-omit-frame-pointer",
                 "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=undefined"
             }
+        },
+
+        {
+            "name": "coverage",
+            "displayName": "Coverage",
+            "description": "Debug build with coverage instrumentation enabled",
+            "inherits": "debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":  "Debug",
+                "TR_BUILD_TESTS":    "ON",
+                "CMAKE_C_FLAGS":     "--coverage -fprofile-arcs -ftest-coverage",
+                "CMAKE_EXE_LINKER_FLAGS": "--coverage"
+            }
         }
+
     ],
 
     "buildPresets": [
@@ -101,6 +115,11 @@
             "name": "ubsan",
             "displayName": "Build UBSan",
             "configurePreset": "ubsan"
+        },
+        {
+            "name": "coverage",
+            "displayName": "Build Coverage",
+            "configurePreset": "coverage"
         }
     ],
 

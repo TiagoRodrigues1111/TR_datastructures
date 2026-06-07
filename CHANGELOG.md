@@ -9,24 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- `src/stack/stack_shared.h` — internal shared definitions for stack implementations
-  (`struct stack`, `struct tr_stack_ops`) eliminating duplication between implementations
-- `src/stack/stack_array.c` — array based stack implementation extracted from `stack.c`
-  into its own file for clarity
-- `src/stack/stack_ll.c` — linked list based stack implementation using singly linked
-  list with inline data storage (`TR_STACK_LL`)
-- `TR_ASSERT` defensive assertions added throughout stack implementation files
-  covering pointer validity, size invariants and pre/post conditions
-- 14 additional unit tests for `TR_STACK_LL` bringing total to 54 tests
-
-### Changed
-- `src/stack/stack.c` — refactored to contain only public API dispatch functions,
-  implementation details moved to `stack_array.c` and `stack_ll.c`
-- `src/CMakeLists.txt` — updated to include `stack_array.c` and `stack_ll.c`
-- `tests/stack/test_stack.c` — added linked list stack tests
-- `examples/stack/example_stack.c` — fixed `%zu` format specifier for MinGW compatibility
-
 ---
 
 ## [0.1.0] - 2026-06-07
@@ -47,6 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.gitignore` — build output, IDE folders, and generated files
 - `.github/workflows/build_test.yml` — CI on Ubuntu and Windows, Debug and Release, GCC and Clang
 - `.github/workflows/docs.yml` — automatic documentation deployment to GitHub Pages
+- `.github/ISSUE_TEMPLATE/bug_report.md` — structured bug report template
+- `.github/ISSUE_TEMPLATE/feature_request.md` — structured feature request template
+- `.github/ISSUE_TEMPLATE/config.yml` — issue template chooser configuration
+- `.github/PULL_REQUEST_TEMPLATE.md` — structured pull request template
 
 #### Public headers
 - `include/tr_datastructures.h` — umbrella header
@@ -60,13 +46,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `src/internal/include/tr_internal.h` — internal utility macros (`TR_ASSERT`, `TR_UNUSED`, `TR_ARRAY_SIZE`, `TR_MIN`, `TR_MAX`)
 
 #### Stack implementation
-- `src/stack/stack.c` — array based stack implementation
+- `src/stack/stack_shared.h` — internal shared definitions (`struct stack`, `struct tr_stack_ops`)
+- `src/stack/stack.c` — public API dispatch functions
+- `src/stack/stack_array.c` — array based stack implementation
   - `TR_STACK_ARRAY_DYNAMIC` — grows automatically by factor of 2 when full
   - `TR_STACK_ARRAY_FIXED` — fixed capacity, returns `TR_ERR_FULL` when full
   - Function pointer dispatch table for runtime implementation selection
+- `src/stack/stack_ll.c` — linked list based stack implementation
+  - `TR_STACK_LL` — singly linked list with inline data storage
+  - Dynamic node allocation, unbounded growth
+- `TR_ASSERT` defensive assertions throughout stack implementation files
+  covering pointer validity, size invariants and pre/post conditions
 
 #### Tests
-- `tests/stack/test_stack.c` — 40 unit tests covering all stack functions and edge cases
+- `tests/stack/test_stack.c` — 54 unit tests covering all stack functions and edge cases
   - NULL argument tests
   - Invalid argument tests
   - Empty stack tests
@@ -75,12 +68,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Dynamic growth tests
   - LIFO order verification
   - Multiple data type tests
+  - Linked list specific tests
 
 #### Examples
 - `examples/stack/example_stack.c` — stack usage examples
   - Basic dynamic stack usage
   - Basic fixed stack usage
   - Real use case — reversing an array using a stack
+- `examples/queue/example_queue.c` — placeholder for queue examples
+
+#### Benchmarks
+- `benchmarks/CMakeLists.txt` — placeholder for future benchmark targets
+- `benchmarks/stack/bench_stack.c` — placeholder for stack benchmarks
+
+#### Fuzz targets
+- `fuzz/CMakeLists.txt` — placeholder for future fuzz targets
+- `fuzz/stack/fuzz_stack.c` — placeholder for stack fuzz target
 
 #### Documentation
 - Full Doxygen documentation for all public headers
@@ -90,11 +93,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scripts/generate_docs.bat` — local documentation generation (Windows)
 
 #### Project documentation
-- `README.md` — comprehensive project documentation with build instructions, usage examples and badges
-- `CONTRIBUTING.md` — contribution guidelines including coding standards, naming conventions and checklist for adding new data structures
+- `README.md` — comprehensive project documentation with badges, build instructions,
+  usage examples, data structures table and project structure
+- `CONTRIBUTING.md` — contribution guidelines including coding standards, naming
+  conventions and checklist for adding new data structures
 - `CODE_OF_CONDUCT.md` — Contributor Covenant code of conduct
 - `LICENSE` — Unlicense public domain dedication
 - `SECURITY.md` — security policy
+
+### Changed
+- `src/tr_datastructures.c` — added placeholder typedef to silence `-Wpedantic` warning
+- `cmake/tr_version.h.in` — moved generated output to source tree for reliable include resolution
+- `CMakeLists.txt` — added global `include_directories` for generated headers
+- `docs/Doxyfile` — refined extraction settings, excluded internal headers from public docs
+- `.github/workflows/build_test.yml` — added `-DTR_BUILD_EXAMPLES=ON` to CI configure step
 
 ---
 

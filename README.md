@@ -2,6 +2,7 @@
 
 [![Build and Test](https://github.com/TiagoRodrigues1111/TR_datastructures/actions/workflows/build_test.yml/badge.svg)](https://github.com/TiagoRodrigues1111/TR_datastructures/actions/workflows/build_test.yml)
 [![Documentation](https://github.com/TiagoRodrigues1111/TR_datastructures/actions/workflows/docs.yml/badge.svg)](https://tiagorodrigues1111.github.io/TR_datastructures/)
+[![codecov](https://codecov.io/gh/TiagoRodrigues1111/TR_datastructures/branch/main/graph/badge.svg)](https://codecov.io/gh/TiagoRodrigues1111/TR_datastructures)
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](https://unlicense.org/)
 
 A generic, portable C data structures library with support for multiple underlying implementations. Designed to work across C89, C99, C11 and C23 standards.

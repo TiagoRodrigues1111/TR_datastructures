@@ -1,0 +1,39 @@
+# ------------------------------------------------------------------
+# codecov.yml
+# Codecov configuration for TR_datastructures
+# ------------------------------------------------------------------
+
+coverage:
+  status:
+    project:
+      default:
+        target: 80%          # minimum acceptable coverage
+        threshold: 2%        # allow coverage to drop by at most 2%
+    patch:
+      default:
+        target: 80%          # new code in PRs must be at least 80% covered
+        threshold: 2%
+
+  precision: 2               # decimal places in coverage percentage
+  round: down                # round down to be conservative
+  range: "70...100"          # color range: red below 70, green at 100
+
+parsers:
+  gcov:
+    branch_detection:
+      conditional: yes
+      loop: yes
+      method: no
+      macro: no
+
+comment:
+  layout: "reach,diff,flags,files"
+  behavior: default
+  require_changes: false     # always post coverage comment on PRs
+
+ignore:
+  - "tests/**"               # don't measure coverage of test files themselves
+  - "examples/**"            # don't measure coverage of examples
+  - "benchmarks/**"          # don't measure coverage of benchmarks
+  - "fuzz/**"                # don't measure coverage of fuzz targets
+  - "build/**"               # ignore build directory
