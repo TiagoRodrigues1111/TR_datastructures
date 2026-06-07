@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://tiagorodrigues1111.github.io/TR_datastructures/
+    about: Check the documentation before opening an issue
+  - name: Security Vulnerability
+    url: https://github.com/TiagoRodrigues1111/TR_datastructures/blob/main/SECURITY.md
+    about: Please report security vulnerabilities as described in SECURITY.md
