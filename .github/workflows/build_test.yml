@@ -110,10 +110,10 @@ jobs:
                --ignore-errors mismatch
           lcov --remove coverage.info \
                '*/tests/*' \
-               '*/examples/*' \
                '*/unity/*' \
                '/usr/*' \
-               --output-file coverage.info
+               --output-file coverage.info \
+               --ignore-errors unused
           lcov --list coverage.info
 
       - name: Upload coverage to Codecov
