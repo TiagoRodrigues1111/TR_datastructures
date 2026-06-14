@@ -282,7 +282,7 @@ tr_result_t tr_stack_size(const struct stack *id_of_stack, size_t *size)
         }
 
         TR_ASSERT(NULL != id_of_stack->ops);
-        TR_ASSERT(NULL != id_of_stack->ops->is_empty);
+        TR_ASSERT(NULL != id_of_stack->ops->size);
 
         return (id_of_stack->ops->size(id_of_stack, size));
 }
@@ -316,7 +316,7 @@ tr_result_t tr_stack_is_empty(const struct stack *id_of_stack, bool *is_empty)
         }
 
         TR_ASSERT(NULL != id_of_stack->ops);
-        TR_ASSERT(NULL != id_of_stack->ops->capacity);
+        TR_ASSERT(NULL != id_of_stack->ops->is_empty);
 
         return (id_of_stack->ops->is_empty(id_of_stack, is_empty));
 }

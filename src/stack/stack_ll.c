@@ -169,13 +169,13 @@ static tr_result_t stack_ll_push(struct stack *id_of_stack, const void *data_to_
         /* allocate node with inline data */
         p_node = (struct tr_stack_ll_node *) malloc(STACK_LL_NODE_SIZE(p_data->size_of_datatype));
 
-        if (NULL == p_node) 
+        if (NULL == p_node)
         {
                 /* LCOV_EXCL_START */
                 fprintf(stderr, "[TR] stack_ll_push: malloc failed\n");
                 return (TR_ERR_ALLOC);
                 /* LCOV_EXCL_STOP */
-        } 
+        }
 
         /* copy data inline into node */
         memcpy(p_node->data, data_to_push, p_data->size_of_datatype);

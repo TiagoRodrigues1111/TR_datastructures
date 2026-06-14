@@ -133,7 +133,7 @@ extern "C"
  * ------------------------------------------------------------------ */
 #define TR_INTERNAL_STATIC_ASSERT(condition, message) TR_STATIC_ASSERT(condition, message)
 
-        // clang-format off
+// clang-format off
 /*****************************************************/
 
 /* 3 external declarations */
@@ -151,7 +151,7 @@ extern "C"
 /* 6 function prototypes */
 /*****************************************************/
 /*****************************************************/
-        // clang-format on
+// clang-format on
 
 #ifdef __cplusplus
 }
