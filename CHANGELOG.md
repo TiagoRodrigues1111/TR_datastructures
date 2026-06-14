@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `tr_stack_size` — `TR_ASSERT` was incorrectly checking `ops->is_empty` instead of `ops->size`
+- `tr_stack_is_empty` — `TR_ASSERT` was incorrectly checking `ops->capacity` instead of `ops->is_empty`
+- Changed a few files to be compliant with .clang-format
+
 ---
 
 ## [0.1.0] - 2026-06-07

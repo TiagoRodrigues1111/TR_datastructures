@@ -124,10 +124,11 @@ struct stack;
  */
 typedef enum tr_stack_type
 {
-    TR_STACK_ARRAY_DYNAMIC = 0, /**< Array based - grows automatically by factor of 2  */
-    TR_STACK_ARRAY_FIXED   = 1, /**< Array based - fixed capacity, returns TR_ERR_FULL */
-    TR_STACK_LL            = 2  /**< Linked list based - dynamic node allocation       */
+        TR_STACK_ARRAY_DYNAMIC = 0, /**< Array based - grows automatically by factor of 2  */
+        TR_STACK_ARRAY_FIXED = 1,   /**< Array based - fixed capacity, returns TR_ERR_FULL */
+        TR_STACK_LL = 2             /**< Linked list based - dynamic node allocation       */
 } tr_stack_type_t;
+
 /*****************************************************/
 
 /* 5 global variable declarations */
