@@ -123,3 +123,20 @@ jobs:
           files: coverage.info
           fail_ci_if_error: true
           verbose: true
+
+
+  # ------------------------------------------------------------------
+  # Summary job - reports single build status for branch protection
+  # ------------------------------------------------------------------
+  build-success:
+    name: build
+    needs: build
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Check build matrix result
+        run: |
+          if [ "${{ needs.build.result }}" != "success" ]; then
+            exit 1
+          fi
