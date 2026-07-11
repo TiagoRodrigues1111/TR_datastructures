@@ -52,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `tr_stack_is_empty` — `TR_ASSERT` was incorrectly checking `ops->capacity` instead of `ops->is_empty`
 - Changed a few files to be compliant with .clang-format
 - Updated the CI file, to work with the build job on github
+- `src/stack/stack_array.c` — `stack_array_pop` now zeroes the vacated memory slot after pop for security consistency with `queue_array_dequeue`
 ---
 
 ## [0.1.0] - 2026-06-07
