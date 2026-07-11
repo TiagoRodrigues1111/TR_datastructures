@@ -59,3 +59,30 @@ add_test(
     NAME    test_stack
     COMMAND test_stack
 )
+
+
+
+
+# ------------------------------------------------------------------
+# 3. QUEUE TESTS
+# ------------------------------------------------------------------
+add_executable(test_queue
+    queue/test_queue.c
+)
+
+target_compile_options(test_queue
+    PRIVATE
+        $<$<C_COMPILER_ID:GNU>:-Wno-unused-result>
+        $<$<C_COMPILER_ID:Clang>:-Wno-unused-result>
+)
+
+target_link_libraries(test_queue
+    PRIVATE
+        tr_datastructures
+        unity
+)
+
+add_test(
+    NAME    test_queue
+    COMMAND test_queue
+)

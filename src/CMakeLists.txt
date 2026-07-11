@@ -12,6 +12,9 @@ target_sources(tr_datastructures
         stack/stack.c
         stack/stack_array.c
         stack/stack_ll.c
+        queue/queue.c
+        queue/queue_array.c
+        queue/queue_ll.c
         tr_datastructures.c
 )
 
@@ -26,6 +29,7 @@ target_include_directories(tr_datastructures
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/internal/include
         ${CMAKE_CURRENT_SOURCE_DIR}/stack
+        ${CMAKE_CURRENT_SOURCE_DIR}/queue
 )
 
 # ------------------------------------------------------------------
