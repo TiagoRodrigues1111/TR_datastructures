@@ -25,7 +25,7 @@ A generic, portable C data structures library with support for multiple underlyi
 | Structure | Array Dynamic | Array Fixed | Linked List | Status      |
 |-----------|--------------|-------------|-------------|-------------|
 | Stack     | ✅           | ✅          | ✅          | Completed   |
-| Queue     | ⬜           | ⬜          | ⬜          | Planned     |
+| Queue     | ✅           | ✅          | ✅          | Planned     |
 
 ---
 
@@ -164,6 +164,69 @@ tr_stack_create(sizeof(int), 10, TR_STACK_ARRAY_FIXED, &p_stack);
 tr_stack_create(sizeof(int), 10, TR_STACK_LL, &p_stack);
 ```
 
+---
+
+### Queue example
+
+```c
+#include "tr_datastructures/tr_queue.h"
+
+int main(void)
+{
+    struct queue *p_queue = NULL;
+    tr_result_t   res     = TR_OK;
+    int           val     = 42;
+    int           out     = 0;
+
+    /* create a dynamic array queue for integers */
+    res = tr_queue_create(sizeof(int), 10, TR_QUEUE_ARRAY_DYNAMIC, &p_queue);
+    if (TR_OK != res)
+    {
+        return 1;
+    }
+
+    /* enqueue a value */
+    res = tr_queue_enqueue(p_queue, &val);
+    if (TR_OK != res)
+    {
+        tr_queue_destroy(&p_queue);
+        return 1;
+    }
+
+    /* peek at the front */
+    res = tr_queue_front(p_queue, &out);
+    if (TR_OK == res)
+    {
+        printf("Front value: %d\n", out);
+    }
+
+    /* dequeue the value */
+    (void)tr_queue_dequeue(p_queue);
+
+    /* destroy the queue */
+    (void)tr_queue_destroy(&p_queue);
+
+    return 0;
+}
+```
+
+### Queue implementation types
+
+```c
+/* dynamic array - circular buffer, grows automatically when full */
+tr_queue_create(sizeof(int), 10, TR_QUEUE_ARRAY_DYNAMIC, &p_queue);
+
+/* fixed array - circular buffer, returns TR_ERR_FULL when capacity reached */
+tr_queue_create(sizeof(int), 10, TR_QUEUE_ARRAY_FIXED, &p_queue);
+
+/* linked list - dynamic node allocation, unbounded */
+tr_queue_create(sizeof(int), 10, TR_QUEUE_LL, &p_queue);
+```
+
+
+---
+
+
 ### Error handling
 
 Every API function returns a `tr_result_t`:
@@ -185,7 +248,8 @@ typedef enum tr_result
 
 The `TR_NODISCARD` attribute causes a compiler warning if a return value is ignored, encouraging proper error handling.
 
----
+
+
 
 ## Version checking
 
@@ -225,6 +289,7 @@ Documentation is generated into `docs/output/html/index.html`.
 
 ## Project structure
 
+
 ```
 TR_datastructures/
 ├── include/
@@ -234,21 +299,33 @@ TR_datastructures/
 │       ├── tr_result.h              # error code enum
 │       ├── tr_types.h               # portable type definitions
 │       ├── tr_version.h             # version information (generated)
-│       └── tr_stack.h               # stack public API
+│       ├── tr_stack.h               # stack public API
+│       └── tr_queue.h               # queue public API
 ├── src/
 │   ├── internal/
 │   │   └── include/
 │   │       └── tr_internal.h        # internal utility macros
 │   ├── stack/
-│   │   ├── stack.c                  # array based implementation
-│   │   └── stack_ll.c               # linked list implementation (planned)
+│   │   ├── stack_shared.h           # internal shared definitions
+│   │   ├── stack.c                  # public API dispatch
+│   │   ├── stack_array.c            # array based implementation
+│   │   └── stack_ll.c               # linked list implementation
+│   ├── queue/
+│   │   ├── queue_shared.h           # internal shared definitions
+│   │   ├── queue.c                  # public API dispatch
+│   │   ├── queue_array.c            # circular buffer implementation
+│   │   └── queue_ll.c               # linked list implementation
 │   └── tr_datastructures.c          # library placeholder
 ├── tests/
-│   └── stack/
-│       └── test_stack.c             # stack unit tests
+│   ├── stack/
+│   │   └── test_stack.c             # 54 stack unit tests
+│   └── queue/
+│       └── test_queue.c             # 58 queue unit tests
 ├── examples/
-│   └── stack/
-│       └── example_stack.c          # stack usage examples
+│   ├── stack/
+│   │   └── example_stack.c          # stack usage examples
+│   └── queue/
+│       └── example_queue.c          # queue usage examples
 ├── benchmarks/                      # benchmarks (planned)
 ├── fuzz/                            # fuzz targets (planned)
 ├── docs/
@@ -267,6 +344,7 @@ TR_datastructures/
 ├── CMakePresets.json
 └── vcpkg.json
 ```
+
 
 
 

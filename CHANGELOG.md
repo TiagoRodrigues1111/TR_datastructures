@@ -9,11 +9,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `include/tr_datastructures/tr_queue.h` — queue public API with array dynamic,
+  array fixed and linked list variants
+- `src/queue/queue_shared.h` — internal shared definitions for queue implementations
+  (`struct queue`, `struct tr_queue_ops`)
+- `src/queue/queue.c` — public API dispatch functions
+- `src/queue/queue_array.c` — array based queue implementation using circular buffer
+  for O(1) enqueue and dequeue
+  - `TR_QUEUE_ARRAY_DYNAMIC` — grows automatically by factor of 2 when full
+  - `TR_QUEUE_ARRAY_FIXED` — fixed capacity, returns `TR_ERR_FULL` when full
+- `src/queue/queue_ll.c` — linked list based queue implementation
+  - `TR_QUEUE_LL` — singly linked list with head and tail pointers for O(1) operations
+  - Inline data storage using flexible array member
+- `tests/queue/test_queue.c` — 58 unit tests covering all queue functions and edge cases
+  - NULL argument tests
+  - Invalid argument tests
+  - Empty queue tests
+  - Normal operation tests
+  - Fixed capacity tests
+  - Dynamic growth tests
+  - FIFO order verification
+  - Circular buffer wrap around test
+  - Linked list specific tests
+- `examples/queue/example_queue.c` — queue usage examples
+  - Basic dynamic queue usage
+  - Basic fixed queue usage
+  - Real use case — print queue simulation
+- `benchmarks/queue/bench_queue.c` — placeholder for queue benchmarks
+- `fuzz/queue/fuzz_queue.c` — placeholder for queue fuzz target
+
+### Changed
+- `include/tr_datastructures.h` — uncommented queue include
+- `README.md` — updated data structures table, added queue examples and project structure
+- `src/CMakeLists.txt` — added queue source files
+- `tests/CMakeLists.txt` — added test_queue target
+- `examples/CMakeLists.txt` — added example_queue target
+
+
 ### Fixed
 - `tr_stack_size` — `TR_ASSERT` was incorrectly checking `ops->is_empty` instead of `ops->size`
 - `tr_stack_is_empty` — `TR_ASSERT` was incorrectly checking `ops->capacity` instead of `ops->is_empty`
 - Changed a few files to be compliant with .clang-format
-
+- Updated the CI file, to work with the build job on github
 ---
 
 ## [0.1.0] - 2026-06-07

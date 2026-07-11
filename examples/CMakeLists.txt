@@ -21,13 +21,19 @@ target_link_libraries(example_stack
 )
 
 # ------------------------------------------------------------------
-# 2. QUEUE EXAMPLE (placeholder)
+# 2. QUEUE EXAMPLE
 # ------------------------------------------------------------------
-# add_executable(example_queue
-#     queue/example_queue.c
-# )
-#
-# target_link_libraries(example_queue
-#     PRIVATE
-#         tr_datastructures
-# )
+add_executable(example_queue
+    queue/example_queue.c
+)
+
+target_compile_options(example_queue
+    PRIVATE
+        $<$<C_COMPILER_ID:GNU>:-Wno-unused-result>
+        $<$<C_COMPILER_ID:Clang>:-Wno-unused-result>
+)
+
+target_link_libraries(example_queue
+    PRIVATE
+        tr_datastructures
+)
