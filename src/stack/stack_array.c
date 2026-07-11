@@ -237,6 +237,7 @@ static tr_result_t stack_array_pop(struct stack *id_of_stack)
         struct tr_stack_array_data *p_data = NULL; /* pointer to implementation data */
 
         TR_ASSERT(NULL != id_of_stack);
+        TR_ASSERT(NULL != id_of_stack->impl);
 
         p_data = (struct tr_stack_array_data *) id_of_stack->impl;
 
@@ -248,6 +249,11 @@ static tr_result_t stack_array_pop(struct stack *id_of_stack)
         {
                 return (TR_ERR_EMPTY);
         }
+
+        memset((uint8_t *) p_data->stack_data +
+                       ((p_data->stack_size - 1u) * p_data->size_of_datatype),
+               0,
+               p_data->size_of_datatype);
 
         p_data->stack_size--;
 
